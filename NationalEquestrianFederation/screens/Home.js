@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 35,
-        backgroundColor: 'black',
+        backgroundColor: 'rgba(252, 252, 252, 0.8)',
         width: 300,
         height: 50,
         alignItems: 'center',
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         borderRadius: 15
     },
     buttonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 20
     }
 })
