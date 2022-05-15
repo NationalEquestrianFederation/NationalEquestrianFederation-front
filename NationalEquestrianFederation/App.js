@@ -1,20 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import Home from './screens/Home';
+import { globalStyles } from './styles/global';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Welcome to National Equestrian Federation App</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ImageBackground source={require('./assets/background.jpg')} style={globalStyles.container} >
+      <Home />
+    </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
