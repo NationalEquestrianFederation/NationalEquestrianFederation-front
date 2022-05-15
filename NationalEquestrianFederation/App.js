@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-import Home from './screens/Home';
+import { ImageBackground } from 'react-native';
 import { globalStyles } from './styles/global';
+import Navigator from './routes/homeStack';
 
 export default function App() {
   return (
     <ImageBackground source={require('./assets/background.jpg')} style={globalStyles.container} >
-      <Home />
+      <Navigator />
     </ImageBackground>
   );
 }

@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import { globalStyles } from '../styles/global';
 
-export default function Home() {
+export default function Home({ navigation }) {
     return (
-        <View style={styles.welcome}>
-            <Text style={styles.text}>National Equestrian Federation</Text>
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>What's new?</Text>
-            </TouchableOpacity>
-        </View>
+        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+            <View style={styles.welcome}>
+                <Text style={styles.text}>National Equestrian Federation</Text>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('News')}>
+                    <Text style={styles.buttonText}>What's new?</Text>
+                </TouchableOpacity>
+            </View>
+        </ImageBackground>
     )
 }
 
