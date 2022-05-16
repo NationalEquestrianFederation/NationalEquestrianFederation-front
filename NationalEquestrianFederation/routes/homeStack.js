@@ -1,12 +1,17 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
 import Home from '../screens/Home';
 import News from '../screens/News';
 import ChoosenNews from '../screens/ChoosenNews';
+import Header from '../shared/header';
 
 const screens = {
     Home: {
-        screen: Home
+        screen: Home,
+        navigationOptions: ({ navigation }) => {
+            return {
+                headerTitle: () => <Header title='Welcome to NEF' navigation={navigation} />
+            }
+        }
     },
     News: {
         screen: News
@@ -29,4 +34,4 @@ const HomeStack = createStackNavigator(screens, {
     }
   });
 
-export default createAppContainer(HomeStack);
+export default HomeStack;

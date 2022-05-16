@@ -1,6 +1,6 @@
 import { ImageBackground } from 'react-native';
 import { globalStyles } from './styles/global';
-import Navigator from './routes/homeStack';
+import Navigator from './routes/drawer';
 
 export default function App() {
   return (
