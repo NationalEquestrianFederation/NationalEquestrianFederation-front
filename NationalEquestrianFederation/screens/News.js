@@ -1,10 +1,13 @@
-import { Text, ImageBackground, FlatList, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Text, ImageBackground, FlatList, TouchableOpacity, StyleSheet, View, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useState } from 'react';
 import { globalStyles } from '../styles/global';
 import Card from '../shared/card';
+import AddNews from './AddNews';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function News({ navigation }) {
 
+    const [modalOpen, setModalOpen] = useState(false);
     const [news, setNews] = useState([
         { title: 'Competition in Belgrade', 
         content: 'Are you ready for big \n competition we are planning \n in few days\
@@ -28,6 +31,27 @@ export default function News({ navigation }) {
 
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+            
+            <Modal visible={modalOpen}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.modalContent}>
+                        <MaterialIcons 
+                            name='close' 
+                            size={24} 
+                            style={{...styles.closeButton, ...styles.modalClose}}
+                            onPress={() => setModalOpen(false)} />
+                        <AddNews  />
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
+
+            <MaterialIcons 
+                name='add' 
+                size={24} 
+                style={styles.addButton}
+                color="rgba(252, 252, 252, 0.8)"
+                onPress={() => setModalOpen(true)} />
+
             <FlatList data={news} renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => navigation.navigate('ChoosenNews', item)}>
                     <Card>
@@ -45,7 +69,7 @@ export default function News({ navigation }) {
 
 const styles = StyleSheet.create({
     cards: {
-        marginTop: 15
+        marginTop: 5
     },
     content: {
         paddingTop: 10,
@@ -53,5 +77,29 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#acaeb0',
         maxHeight: 30
+    },
+    modalContent: {
+        flex: 1
+    },
+    addButton: {
+        marginTop: 10,
+        borderWidth: 1,
+        padding: 2,
+        borderRadius: 10,
+        marginRight: '5%',
+        alignSelf: 'flex-end',
+    },
+    closeButton: {
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        padding: 2,
+        borderRadius: 10,
+        marginRight: 5,
+        alignSelf: 'flex-end',
+    },
+    modalClose: {
+        marginTop: 5,
+        marginBottom: 0,
     }
   });
