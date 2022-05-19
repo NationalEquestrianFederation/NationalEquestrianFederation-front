@@ -10,20 +10,18 @@ export default function ChoosenHorseClub({ navigation }) {
         description: navigation.getParam('description')
     }
 
-    const goToHorses = () => {
-        navigation.navigate('Horses');
-    }
-
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
-            <TouchableOpacity onPress={() => goToHorses()}>
+            <TouchableOpacity onPress={() => navigation.navigate('Horses')}>
                 <Card>
                     <Text style={globalStyles.titleText}>Horses</Text>
                 </Card>
             </TouchableOpacity>
-            <Card>
-                <Text style={globalStyles.titleText}>Riders</Text>
-            </Card>
+            <TouchableOpacity onPress={() => navigation.navigate('Riders')}>
+                <Card>
+                    <Text style={globalStyles.titleText}>Riders</Text>
+                </Card>
+            </TouchableOpacity>
             <Card>
                 <Text style={globalStyles.titleText}>Riding school</Text>
             </Card>

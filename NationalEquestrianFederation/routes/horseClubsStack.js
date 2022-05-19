@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Header from '../shared/header';
 import ChoosenHorseClub from '../screens/ChoosenHorseClub';
 import Horses from '../screens/Horses';
+import Riders from '../screens/Riders';
 
 const screens = {
     HorseClubs: {
@@ -23,6 +24,9 @@ const screens = {
     },
     Horses: {
         screen: Horses
+    },
+    Riders: {
+        screen: Riders
     }
 }
 
