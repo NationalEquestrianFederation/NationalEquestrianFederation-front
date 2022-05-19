@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
         maxHeight: 30
     },
     modalContent: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'rgba(200, 200, 200, 0.8)'
     },
     addButton: {
         marginTop: 10,
