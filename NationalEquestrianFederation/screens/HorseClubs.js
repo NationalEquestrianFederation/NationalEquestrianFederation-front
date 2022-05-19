@@ -6,8 +6,7 @@ import Card from '../shared/card';
 export default function HorseClubs({ navigation }) {
 
     const [clubs, setClubs] = useState([
-        { name: 'KK Viking', place: 'Novi Sad', 
-        description: 'Mi smo VIKING', key: 1 },
+        { name: 'KK Viking', place: 'Novi Sad', description: 'Mi smo VIKING', key: 1 },
         { name: 'KK Granicar', place: 'Belgrade', description: 'Mi smo GRANICAR', key: 2 }
 
     ])

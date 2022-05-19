@@ -1,4 +1,4 @@
-import { Text, ImageBackground, StyleSheet, ScrollView } from 'react-native';
+import { Text, ImageBackground, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../styles/global';
 import Card from '../shared/card';
 
@@ -10,11 +10,17 @@ export default function ChoosenHorseClub({ navigation }) {
         description: navigation.getParam('description')
     }
 
+    const goToHorses = () => {
+        navigation.navigate('Horses');
+    }
+
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
-            <Card>
-                <Text style={globalStyles.titleText}>Horses</Text>
-            </Card>
+            <TouchableOpacity onPress={() => goToHorses()}>
+                <Card>
+                    <Text style={globalStyles.titleText}>Horses</Text>
+                </Card>
+            </TouchableOpacity>
             <Card>
                 <Text style={globalStyles.titleText}>Riders</Text>
             </Card>
