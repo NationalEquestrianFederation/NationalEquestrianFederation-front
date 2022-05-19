@@ -22,12 +22,16 @@ export default function ChoosenHorseClub({ navigation }) {
                     <Text style={globalStyles.titleText}>Riders</Text>
                 </Card>
             </TouchableOpacity>
-            <Card>
-                <Text style={globalStyles.titleText}>Riding school</Text>
-            </Card>
-            <Card>
-                <Text style={globalStyles.titleText}>Trainers</Text>
-            </Card>
+            <TouchableOpacity onPress={() => navigation.navigate('RidingSchoolOffers')}>
+                <Card>
+                    <Text style={globalStyles.titleText}>Riding School</Text>
+                </Card>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Trainers')}>
+                <Card>
+                    <Text style={globalStyles.titleText}>Trainers</Text>
+                </Card>
+            </TouchableOpacity>
             <ScrollView>
                 <Card>
                     <Text style={styles.label}>Name</Text>

@@ -4,6 +4,8 @@ import Header from '../shared/header';
 import ChoosenHorseClub from '../screens/ChoosenHorseClub';
 import Horses from '../screens/Horses';
 import Riders from '../screens/Riders';
+import RidingSchoolOffers from '../screens/RidingSchoolOffers';
+import Trainers from '../screens/Trainers';
 
 const screens = {
     HorseClubs: {
@@ -27,6 +29,12 @@ const screens = {
     },
     Riders: {
         screen: Riders
+    },
+    RidingSchoolOffers: {
+        screen: RidingSchoolOffers
+    },
+    Trainers: {
+        screen: Trainers
     }
 }
 
