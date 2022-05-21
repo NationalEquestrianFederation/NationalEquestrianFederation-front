@@ -6,8 +6,10 @@ export default function ChoosenHorseClub({ navigation }) {
 
     const club = {
         name: navigation.getParam('name'),
-        place: navigation.getParam('place'),
-        description: navigation.getParam('description')
+        location: navigation.getParam('address'),
+        description: navigation.getParam('description'),
+        email: navigation.getParam('email'),
+        phone: navigation.getParam('phone')
     }
 
     return (
@@ -37,7 +39,11 @@ export default function ChoosenHorseClub({ navigation }) {
                     <Text style={styles.label}>Name</Text>
                     <Text>{club.name}</Text>
                     <Text style={styles.label}>Location</Text>
-                    <Text>{club.place}</Text>
+                    <Text>{club.location}</Text>
+                    <Text style={styles.label}>Email</Text>
+                    <Text>{club.email}</Text>
+                    <Text style={styles.label}>Phone</Text>
+                    <Text>{club.phone}</Text>
                     <Text style={styles.label}>Something about us</Text>
                     <Text>{club.description}</Text>
                 </Card>

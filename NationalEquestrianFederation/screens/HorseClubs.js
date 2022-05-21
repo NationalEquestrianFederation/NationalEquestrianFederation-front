@@ -1,21 +1,39 @@
 import { Text, ImageBackground, FlatList, TouchableOpacity, StyleSheet, View, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { globalStyles } from '../styles/global';
 import Card from '../shared/card';
 import AddHorseClub from './AddHorseClub';
 import { MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios';
 
 export default function HorseClubs({ navigation }) {
 
-    const [modalOpen, setModalOpen] = useState(false);
-    const [clubs, setClubs] = useState([
-        { name: 'KK Viking', place: 'Novi Sad', description: 'Mi smo VIKING', key: 1 },
-        { name: 'KK Granicar', place: 'Belgrade', description: 'Mi smo GRANICAR', key: 2 }
+    const serverUrl = "http://10.0.2.2:8080";
 
-    ])
+    const [modalOpen, setModalOpen] = useState(false);
+    const [clubs, setClubs] = useState([]);
+
+    useEffect(() => {
+        getHorseClubs();
+    }, [])
+
+    const getHorseClubs = () => {
+        axios.get(serverUrl + "/horseClubs?name=")
+            .then(response => {
+                setClubs(response.data);
+            })
+    }
 
     const horseClubPressHandler = (club) => {
         navigation.navigate('HorseClub', club);
+    }
+
+    const addHorseClub = (horseClub) => {
+        axios.post(serverUrl + "/horseClubs", horseClub)
+            .then(response => {
+                setModalOpen(false);
+                getHorseClubs();
+            })
     }
 
     return (
@@ -29,7 +47,7 @@ export default function HorseClubs({ navigation }) {
                             size={24} 
                             style={{...styles.closeButton, ...styles.modalClose}}
                             onPress={() => setModalOpen(false)} />
-                        <AddHorseClub  />
+                        <AddHorseClub addHorseClub={addHorseClub}  />
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
@@ -45,7 +63,7 @@ export default function HorseClubs({ navigation }) {
                 <TouchableOpacity onPress={() => horseClubPressHandler(item)} >
                     <Card>
                         <Text style={globalStyles.titleText}>{item.name}</Text>
-                        <Text style={styles.place}>{item.place}</Text>
+                        <Text style={styles.place}>{item.address}</Text>
                     </Card>
                 </TouchableOpacity>
             )} style={styles.cards}/>
