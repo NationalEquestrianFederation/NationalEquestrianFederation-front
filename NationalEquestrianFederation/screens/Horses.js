@@ -1,21 +1,32 @@
 import { Text, ImageBackground, FlatList, StyleSheet } from 'react-native';
 import Card from '../shared/card';
 import { globalStyles } from '../styles/global';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function Horses({ navigation }) {
 
-    const [horses, setHorses] = useState([
-        { name: 'Quincon Z', gender: 'stalion' },
-        { name: 'Easy Gold', gender: 'mare' }
-    ])
+    const serverUrl = "http://10.0.2.2:8080";
+
+    const [horses, setHorses] = useState([]);
+
+    useEffect(() => {
+        getHorses();
+    }, [])
+
+    const getHorses = () => {
+        axios.get(serverUrl + "/horses?horseClub=0")
+            .then(response => {
+                setHorses(response.data);
+            })
+    }
 
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
             <FlatList data={horses} renderItem={({ item }) => (
                 <Card>
                     <Text style={globalStyles.titleText}>{item.name}</Text>
-                    <Text style={styles.place}>{item.gender}</Text>
+                    <Text style={styles.place}>{item.gender.toString()}</Text>
                 </Card>
             )} style={styles.cards}/>
         </ImageBackground>
