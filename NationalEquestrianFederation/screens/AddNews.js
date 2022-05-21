@@ -2,14 +2,15 @@ import { StyleSheet, Button, TextInput, View, Text } from "react-native";
 import { globalStyles } from "../styles/global";
 import { Formik } from 'formik';
 
-export default function AddNews() {
+export default function AddNews({ addNews }) {
 
     return (
         <View>
             <Formik
-                initialValues={{title: '', body: '', rating: ''}}
+                initialValues={{title: '', content: '', newsType: 'nationalFederation', postedBy: 1}}
                 onSubmit={(values, actions) => {
                     actions.resetForm();
+                    addNews(values);
                 }}>
                 {(props) => (
                     <View>
@@ -30,11 +31,13 @@ export default function AddNews() {
                             multiline 
                             minHeight={60}
                             placeholder='News content'
-                            onChangeText={props.handleChange('body')}
-                            value={props.values.body}
-                            onBlur={props.handleBlur('body')}
+                            onChangeText={props.handleChange('content')}
+                            value={props.values.content}
+                            onBlur={props.handleBlur('content')}
                         />
-                        <Text style={globalStyles.errorText}>{props.touched.body && props.errors.body}</Text>
+                        <Text style={globalStyles.errorText}>{props.touched.content && props.errors.content}</Text>
+
+                        <Button title="Submit" onPress={props.handleSubmit} />
 
                     </View>
                 )}
