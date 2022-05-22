@@ -1,14 +1,25 @@
 import { Text, ImageBackground, FlatList, StyleSheet, View } from 'react-native';
 import Card from '../shared/card';
 import { globalStyles } from '../styles/global';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function Riders({ navigation }) {
 
-    const [riders, setRiders] = useState([
-        { name: 'Sara', surname: 'Poparic', age: 22 },
-        { name: 'Mila', surname: 'Poparic', age: 19 }
-    ])
+    const serverUrl = "http://10.0.2.2:8080";
+
+    const [riders, setRiders] = useState([])
+
+    useEffect(() => {
+        getRiders();
+    }, [])
+
+    const getRiders = () => {
+        axios.get(serverUrl + "/riders?horseClub=0")
+            .then(response => {
+                setRiders(response.data);
+            })
+    }
 
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
@@ -19,8 +30,7 @@ export default function Riders({ navigation }) {
                     <Text style={styles.title}>{item.surname}</Text>
                 </View>
                 <View style={styles.name}>
-                    <Text >Age: </Text>
-                    <Text>{item.age}</Text>
+                    <Text>{item.licence}</Text>
                 </View>
                 </Card>
             )} style={styles.cards}/>

@@ -17,7 +17,7 @@ export default function ChoosenCompetition({ navigation }) {
                         <Text style={styles.label}>End date: </Text>
                         <Text>{navigation.getParam('endDate')}</Text>
                         <Text style={styles.label}>Place: </Text>
-                        <Text>{navigation.getParam('place')}</Text>
+                        <Text>{navigation.getParam('location')}</Text>
                         <Text style={styles.content}></Text>
                     </ScrollView>
                 </Card>
