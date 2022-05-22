@@ -6,7 +6,6 @@ import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
 import AddHorse from './AddHorse';
 import EditHorse from './EditHorse';
-import { set } from 'react-native-reanimated';
 
 export default function Horses({ navigation }) {
 
@@ -114,7 +113,7 @@ export default function Horses({ navigation }) {
 
 const styles = StyleSheet.create({
     cards: {
-        marginTop: 15
+        marginTop: 5
     },
     buttons: {
         flexDirection: 'row',
