@@ -13,7 +13,8 @@ export default function Riders({ navigation }) {
 
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [riders, setRiders] = useState([])
+    const [riders, setRiders] = useState([]);
+    const [editingRider, setEditingRider] = useState({});
 
     useEffect(() => {
         getRiders();
@@ -47,6 +48,11 @@ export default function Riders({ navigation }) {
                 setEditModalOpen(false);
                 getRiders();
             })
+    }
+
+    const editForm = (rider) => {
+        setEditingRider(rider);
+        setEditModalOpen(true);
     }
 
     return (
@@ -83,7 +89,7 @@ export default function Riders({ navigation }) {
                                     size={24} 
                                     style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
                                     onPress={() => setEditModalOpen(false)} />
-                                <EditRider rider={item} editRider={editRider}  />
+                                <EditRider rider={editingRider} editRider={editRider}  />
                             </View>
                         </TouchableWithoutFeedback>
                     </Modal>
@@ -107,7 +113,7 @@ export default function Riders({ navigation }) {
                             name='edit' 
                             size={24} 
                             style={styles.deleteButton} 
-                            onPress={() => setEditModalOpen(true)} />
+                            onPress={() => editForm(item)} />
                     </View>
 
                 </Card>

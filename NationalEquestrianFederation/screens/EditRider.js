@@ -1,72 +1,78 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
 import { globalStyles } from "../styles/global";
 import { Formik } from 'formik';
+import { useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
 
 export default function EditRider({ rider, editRider }) {
 
+    const id = rider.id;
+    const [name, setName] = useState(rider.name);
+    const [surname, setSurname] = useState(rider.surname);
+    const [dateOfBirth, setDateOfBirth] = useState(rider.dateOfBirth);
+    const [gender, setGender] = useState(rider.gender);
+    const [licence, setLicence] = useState(rider.licence);
+
+    const editRiderHandler = () => {
+        var rider = {
+            id: id,
+            name: name,
+            surname: surname,
+            dateOfBirth: dateOfBirth,
+            gender: gender,
+            licence: licence
+        }
+        editRider(rider);
+    }
+
     return (
         <View>
-            <Formik
-                initialValues={{id: rider.id, name: rider.name, surname: rider.surname, dateOfBirth: rider.dateOfBirth, 
-                    gender: rider.gender, licence: rider.licence}}
-                onSubmit={(values, actions) => {
-                    editRider(values);
-                }}>
-                {(props) => (
-                    <ScrollView>
+            <ScrollView>
+                <Text style={styles.titleText}>Edit rider</Text>
 
-                        <Text style={styles.titleText}>Edit rider</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Name'
+                    onChangeText={(value) => setName(value)}
+                    value={name}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Name'
-                            onChangeText={props.handleChange('name')}
-                            value={props.values.name}
-                            onBlur={props.handleBlur('name')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.name && props.errors.name}</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Surname'
+                    onChangeText={(value) => setSurname(value)}
+                    value={surname}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Surname'
-                            onChangeText={props.handleChange('surname')}
-                            value={props.values.surname}
-                            onBlur={props.handleBlur('surname')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.surname && props.errors.surname}</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Date of birth'
+                    onChangeText={(value) => setDateOfBirth(value)}
+                    value={dateOfBirth}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Date of birth'
-                            onChangeText={props.handleChange('dateOfBirth')}
-                            value={props.values.dateOfBirth}
-                            onBlur={props.handleBlur('dateOfBirth')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.dateOfBirth && props.errors.dateOfBirth}</Text>
+                <Picker 
+                    selectedValue={gender}
+                    onValueChange={value => setGender(value)}>
+                    <Picker.Item label="Female" value="female" />
+                    <Picker.Item label="Male" value="male" />
+                </Picker>
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Gender'
-                            onChangeText={props.handleChange('gender')}
-                            value={props.values.gender}
-                            onBlur={props.handleBlur('gender')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.gender && props.errors.gender}</Text>
+                <Picker 
+                    selectedValue={licence}
+                    onValueChange={value => setLicence(value)}>
+                    <Picker.Item label="Children" value="children" />
+                    <Picker.Item label="Junior" value="junior" />
+                    <Picker.Item label="Senior" value="senior" />
+                </Picker>
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Licence'
-                            onChangeText={props.handleChange('licence')}
-                            value={props.values.licence}
-                            onBlur={props.handleBlur('licence')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.licence && props.errors.licence}</Text>
-
-                        <Button title="Submit" onPress={props.handleSubmit} />
-
-                    </ScrollView>
-                )}
-            </Formik>
+                <Button title="Submit" onPress={editRiderHandler} />
+            </ScrollView>
         </View>
     )
 
