@@ -14,6 +14,7 @@ export default function Horses({ navigation }) {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [horses, setHorses] = useState([]);
+    const [editingHorse, setEditingHorse] = useState({});
 
     useEffect(() => {
         getHorses();
@@ -47,6 +48,11 @@ export default function Horses({ navigation }) {
                 setEditModalOpen(false);
                 getHorses();
             })
+    }
+
+    const editForm = (horse) => {
+        setEditingHorse(horse);
+        setEditModalOpen(true);
     }
 
     return (
@@ -83,13 +89,13 @@ export default function Horses({ navigation }) {
                                     size={24} 
                                     style={{...styles.closeButton, ...styles.modalClose}}
                                     onPress={() => setEditModalOpen(false)} />
-                                <EditHorse horse={item} editHorse={editHorse}  />
+                                <EditHorse horse={editingHorse} editHorse={editHorse}  />
                             </View>
                         </TouchableWithoutFeedback>
                     </Modal>
                 
                     <Text style={globalStyles.titleText}>{item.name}</Text>
-                    <Text style={styles.place}>{item.gender.toString()}</Text>
+                    <Text style={styles.place}>{item.gender}</Text>
 
                     <View style={styles.buttons}>
                         <MaterialIcons 
@@ -102,7 +108,7 @@ export default function Horses({ navigation }) {
                             name='edit' 
                             size={24} 
                             style={styles.deleteButton} 
-                            onPress={() => setEditModalOpen(true)} />
+                            onPress={() => editForm(item)} />
                     </View>
 
                 </Card>

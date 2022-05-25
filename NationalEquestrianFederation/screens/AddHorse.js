@@ -1,63 +1,66 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
 import { globalStyles } from "../styles/global";
 import { Formik } from 'formik';
+import { Picker } from '@react-native-picker/picker';
+import { useState } from 'react';
 
 export default function AddHorse({ addHorse }) {
 
+    const [name, setName] = useState('');
+    const [gender, setGender] = useState('');
+    const [owner, setOwner] = useState('');
+    const [yearOfBirh, setYearOfBirth] = useState('');
+
+    const addHorseHandler = () => {
+        var horse = {
+            name: name,
+            gender: gender,
+            owner: owner,
+            yearOfBirh: yearOfBirh,
+            horseClub: 1
+        }
+        addHorse(horse);
+    }
+
     return (
         <View>
-            <Formik
-                initialValues={{name: '', gender: '', horseClub: 1, owner: '', yearOfBirth: ''}}
-                onSubmit={(values, actions) => {
-                    actions.resetForm();
-                    addHorse(values);
-                }}>
-                {(props) => (
-                    <ScrollView>
+            <ScrollView>
+                <Text style={styles.titleText}>Add horse</Text>
 
-                        <Text style={styles.titleText}>Add horse</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Name'
+                    onChangeText={(value) => setName(value)}
+                    value={name}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Club name'
-                            onChangeText={props.handleChange('name')}
-                            value={props.values.name}
-                            onBlur={props.handleBlur('name')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.name && props.errors.name}</Text>
+                <Picker 
+                    selectedValue={gender}
+                    onValueChange={value => setGender(value)}>
+                    <Picker.Item label="Stallion" value="stallion" />
+                    <Picker.Item label="Mare" value="mare" />
+                </Picker>
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Gender'
-                            onChangeText={props.handleChange('gender')}
-                            value={props.values.gender}
-                            onBlur={props.handleBlur('gender')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.gender && props.errors.gender}</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Year of birth'
+                    onChangeText={(value) => setYearOfBirth(value)}
+                    value={yearOfBirh}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Year of birth'
-                            onChangeText={props.handleChange('yearOfBirth')}
-                            value={props.values.yearOfBirth}
-                            onBlur={props.handleBlur('yearOfBirth')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.yearOfBirth && props.errors.yearOfBirth}</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Owner'
+                    onChangeText={(value) => setOwner(value)}
+                    value={owner}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Owner'
-                            onChangeText={props.handleChange('owner')}
-                            value={props.values.owner}
-                            onBlur={props.handleBlur('owner')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.owner && props.errors.owner}</Text>
-
-                        <Button title="Submit" onPress={props.handleSubmit} />
-
-                    </ScrollView>
-                )}
-            </Formik>
+                <Button title="Submit" onPress={addHorseHandler} />
+            </ScrollView>
         </View>
     )
 
