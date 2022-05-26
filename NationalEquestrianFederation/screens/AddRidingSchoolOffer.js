@@ -1,73 +1,113 @@
-import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
+import { StyleSheet, Button, TextInput, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/global";
-import { Formik } from 'formik';
+import { useState } from "react";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddRidingSchoolOffer({ addOffer }) {
 
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(0);
+    const [startDate, setStartDate] = useState(new Date());
+    const [openStartDate, setOpenStartDate] = useState(false);
+    const [startDateText, setStartDateText] = useState(new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear());
+    const [endDate, setEndDate] = useState(new Date());
+    const [openEndDate, setOpenEndDate] = useState(false);
+    const [endDateText, setEndDateText] = useState(new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear());
+    const [description, setDescription] = useState('');
+
+    const addRidingSchoolOffer = () => {
+        var offer = {
+            name: name,
+            price: price,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            horseClub: 1
+        }
+        addOffer(offer);
+    }
+
+    const startDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || startDate;
+        setStartDate(currentDate);
+        setOpenStartDate(false);
+
+        var tempDate = new Date(currentDate);
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        setStartDateText(fDate);
+    }
+
+    const endDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || endDate;
+        setEndDate(currentDate);
+        setOpenEndDate(false);
+
+        var tempDate = new Date(currentDate);
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        setEndDateText(fDate);
+    }
+
     return (
         <View>
-            <Formik
-                initialValues={{name: '', price: 0, startDate: '', endDate: '', description: '', horseClub: 1}}
-                onSubmit={(values, actions) => {
-                    actions.resetForm();
-                    addOffer(values);
-                }}>
-                {(props) => (
-                    <ScrollView>
+            <ScrollView>
+                <Text style={styles.titleText}>Add riding school offer</Text>
 
-                        <Text style={styles.titleText}>Add riding school offer</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Name'
+                    onChangeText={(value) => setName(value)}
+                    value={name}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Name'
-                            onChangeText={props.handleChange('name')}
-                            value={props.values.name}
-                            onBlur={props.handleBlur('name')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.name && props.errors.name}</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Description'
+                    multiline
+                    onChangeText={(value) => setDescription(value)}
+                    value={description}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Price'
-                            keyboardType="numeric"
-                            onChangeText={props.handleChange('price')}
-                            value={props.values.price}
-                            onBlur={props.handleBlur('price')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.price && props.errors.price}</Text>
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Price'
+                    keyboardType="numeric"
+                    onChangeText={(value) => setPrice(value)}
+                    value={price.toString()}
+                />
+                <Text></Text>
 
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Start date'
-                            onChangeText={props.handleChange('startDate')}
-                            value={props.values.startDate}
-                            onBlur={props.handleBlur('startDate')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.startDate && props.errors.startDate}</Text>
-
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='End date'
-                            onChangeText={props.handleChange('endDate')}
-                            value={props.values.endDate}
-                            onBlur={props.handleBlur('endDate')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.endDate && props.errors.endDate}</Text>
-
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Description'
-                            onChangeText={props.handleChange('description')}
-                            value={props.values.description}
-                            onBlur={props.handleBlur('description')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.description && props.errors.description}</Text>
-
-                        <Button title="Submit" onPress={props.handleSubmit} />
-
-                    </ScrollView>
+                {openStartDate && (<DateTimePicker
+                    value={startDate}
+                    onChange={startDateChange}
+                    dateFormat="day month year"
+                    minimumDate={new Date()}
+                    />
                 )}
-            </Formik>
+
+                <TouchableOpacity style={globalStyles.dateButton} onPress={() => setOpenStartDate(true)}>
+                    <Text style={globalStyles.dateButtonText}>Start date - {startDateText}</Text>
+                </TouchableOpacity>
+                <Text></Text>
+
+                {openEndDate && (<DateTimePicker
+                    value={endDate}
+                    onChange={endDateChange}
+                    dateFormat="day month year"
+                    minimumDate={new Date()}
+                    />
+                )}
+
+                <TouchableOpacity style={globalStyles.dateButton} onPress={() => setOpenEndDate(true)}>
+                    <Text style={globalStyles.dateButtonText}>End date - {endDateText}</Text>
+                </TouchableOpacity>
+                <Text></Text>
+                <Text></Text>
+
+                <Button title="Submit" onPress={addRidingSchoolOffer} />
+
+            </ScrollView>
         </View>
     )
 
@@ -81,4 +121,5 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 10
     },
+    
 })

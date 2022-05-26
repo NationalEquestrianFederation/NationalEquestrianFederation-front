@@ -53,5 +53,15 @@ export const globalStyles = StyleSheet.create({
     modalClose: {
         marginTop: 5,
         marginBottom: 0,
+    },
+    dateButton: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 6,
+    },
+    dateButtonText: {
+        fontSize: 18,
     }
 })
