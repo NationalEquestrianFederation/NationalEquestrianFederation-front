@@ -1,11 +1,11 @@
-import Clubs from '../screens/HorseClubs';
+import Clubs from '../screens/horseClubs/HorseClubs';
 import { createStackNavigator } from 'react-navigation-stack';
 import Header from '../shared/header';
-import ChoosenHorseClub from '../screens/ChoosenHorseClub';
-import Horses from '../screens/Horses';
-import Riders from '../screens/Riders';
-import RidingSchoolOffers from '../screens/RidingSchoolOffers';
-import Trainers from '../screens/Trainers';
+import ChoosenHorseClub from '../screens/horseClubs/ChoosenHorseClub';
+import Horses from '../screens/horses/Horses';
+import Riders from '../screens/riders/Riders';
+import RidingSchoolOffers from '../screens/horseClubs/ridingSchoolOffers/RidingSchoolOffers';
+import Trainers from '../screens/trainers/Trainers';
 
 const screens = {
     HorseClubs: {

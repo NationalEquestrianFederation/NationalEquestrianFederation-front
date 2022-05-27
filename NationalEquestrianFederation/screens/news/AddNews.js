@@ -1,33 +1,25 @@
 import { StyleSheet, Button, TextInput, View, Text } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../styles/global";
 import { Formik } from 'formik';
 
-export default function AddHorseClub() {
+export default function AddNews({ addNews }) {
 
     return (
         <View>
             <Formik
-                initialValues={{title: '', body: '', rating: ''}}
+                initialValues={{title: '', content: '', newsType: 'nationalFederation', postedBy: 1}}
                 onSubmit={(values, actions) => {
                     actions.resetForm();
+                    addNews(values);
                 }}>
                 {(props) => (
                     <View>
 
-                        <Text style={styles.titleText}>Add horse club</Text>
+                        <Text style={styles.titleText}>Add news</Text>
 
                         <TextInput 
                             style={globalStyles.input} 
-                            placeholder='Club name'
-                            onChangeText={props.handleChange('title')}
-                            value={props.values.title}
-                            onBlur={props.handleBlur('title')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.title && props.errors.title}</Text>
-
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Club location'
+                            placeholder='News title'
                             onChangeText={props.handleChange('title')}
                             value={props.values.title}
                             onBlur={props.handleBlur('title')}
@@ -38,12 +30,14 @@ export default function AddHorseClub() {
                             style={globalStyles.input}
                             multiline 
                             minHeight={60}
-                            placeholder='Something about...'
-                            onChangeText={props.handleChange('body')}
-                            value={props.values.body}
-                            onBlur={props.handleBlur('body')}
+                            placeholder='News content'
+                            onChangeText={props.handleChange('content')}
+                            value={props.values.content}
+                            onBlur={props.handleBlur('content')}
                         />
-                        <Text style={globalStyles.errorText}>{props.touched.body && props.errors.body}</Text>
+                        <Text style={globalStyles.errorText}>{props.touched.content && props.errors.content}</Text>
+
+                        <Button title="Submit" onPress={props.handleSubmit} />
 
                     </View>
                 )}
@@ -60,8 +54,5 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         alignSelf: 'center',
         marginBottom: 10
-    },
-    checkbox: {
-        flexDirection: 'row'
     }
 })

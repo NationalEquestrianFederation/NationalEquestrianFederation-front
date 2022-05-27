@@ -1,25 +1,39 @@
 import { Text, ImageBackground, FlatList, TouchableOpacity, StyleSheet, View, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { useState } from 'react';
-import { globalStyles } from '../styles/global';
-import Card from '../shared/card';
-import AddHorseClub from './AddHorseClub';
+import { useState, useEffect } from 'react';
+import { globalStyles } from '../../styles/global';
+import Card from '../../shared/card';
+import AddNews from './AddNews';
 import { MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios';
 
-export default function HorseClubs({ navigation }) {
+export default function News({ navigation }) {
+
+    const serverUrl = "http://10.0.2.2:8080"
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [clubs, setClubs] = useState([
-        { name: 'KK Viking', place: 'Novi Sad', description: 'Mi smo VIKING', key: 1 },
-        { name: 'KK Granicar', place: 'Belgrade', description: 'Mi smo GRANICAR', key: 2 }
+    const [news, setNews] = useState([]);
 
-    ])
+    useEffect(() => {
+        getNews();
+    }, [])
 
-    const horseClubPressHandler = (club) => {
-        navigation.navigate('HorseClub', club);
+    const getNews = () => {
+        axios.get(serverUrl + "/news?newsType=nationalFederation")
+            .then((response) => {
+                setNews(response.data);
+            })
+    }
+
+    const addNews = (news) => {
+        axios.post(serverUrl + "/news", news)
+            .then((response) => {
+                setModalOpen(false);
+                getNews();
+            })
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             
             <Modal visible={modalOpen}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -29,7 +43,7 @@ export default function HorseClubs({ navigation }) {
                             size={24} 
                             style={{...styles.closeButton, ...styles.modalClose}}
                             onPress={() => setModalOpen(false)} />
-                        <AddHorseClub  />
+                        <AddNews addNews={addNews} />
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
@@ -40,12 +54,15 @@ export default function HorseClubs({ navigation }) {
                 style={styles.addButton}
                 color="rgba(252, 252, 252, 0.8)"
                 onPress={() => setModalOpen(true)} />
-            
-            <FlatList data={clubs} renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => horseClubPressHandler(item)} >
+
+            <FlatList data={news} renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => navigation.navigate('ChoosenNews', item)}>
                     <Card>
-                        <Text style={globalStyles.titleText}>{item.name}</Text>
-                        <Text style={styles.place}>{item.place}</Text>
+                        <Text style={globalStyles.titleDate}>{item.date}</Text>
+                        <Text style={globalStyles.titleText}>{item.title}</Text>
+                        <View style={styles.content}>
+                            <Text>{item.content}</Text>
+                        </View>
                     </Card>
                 </TouchableOpacity>
             )} style={styles.cards}/>
@@ -57,8 +74,12 @@ const styles = StyleSheet.create({
     cards: {
         marginTop: 5
     },
-    place: {
-        marginTop: 3
+    content: {
+        paddingTop: 10,
+        marginTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#acaeb0',
+        maxHeight: 30
     },
     modalContent: {
         flex: 1,
