@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ImageBackground, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Calendar, CaledarList, Agenda } from 'react-native-calendars';
-import { globalStyles } from '../styles/global';
+import { globalStyles } from '../../styles/global';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AddCompetition from './AddCompetition';
@@ -14,7 +14,8 @@ export default function CompetitionCalendar({ navigation }) {
     const [dates, setDates] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [competitionsInDay, setCompetitionsInDay] = useState([]);
-    
+
+    const [role, setRole] = useState('nationalFederation');    
 
     useEffect(() => {
         getCompetitions();
@@ -25,10 +26,6 @@ export default function CompetitionCalendar({ navigation }) {
             .then(response => {
                 setCompetitions(response.data);
             })
-    }
-
-    const getMarkedDates = () => {
-        return {'2022-05-19': {periods: [{startingDay: true, endingDay: true, color: 'blur'}]}}
     }
 
     const datePressHandler = (day) => {
@@ -45,7 +42,7 @@ export default function CompetitionCalendar({ navigation }) {
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={globalStyles.container}>
 
             <Modal visible={modalOpen}>
@@ -61,33 +58,36 @@ export default function CompetitionCalendar({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            <MaterialIcons 
-                name='add' 
-                size={24} 
-                style={globalStyles.addButton}
-                color="rgba(252, 252, 252, 0.8)"
-                onPress={() => setModalOpen(true)} />
+            {(role === 'nationalFederation' || role === 'cityFederation') && (
+                <MaterialIcons 
+                    name='add' 
+                    size={24} 
+                    style={globalStyles.addButton}
+                    color="rgba(252, 252, 252, 0.8)"
+                    onPress={() => setModalOpen(true)} 
+                />
+            )}
 
-            <Calendar style={styles.calendar}
+            <Calendar style={styles.calendar} 
                 markingType="multi-period"
                 markedDates={{
-                    '2022-05-19': {
-                        periods: [
-                            {startingDay: true, endingDay: false, color: 'blue'},
-                            {startingDay: true, endingDay: false, color: 'red'}
-                        ]
+                    '2022-05-14': {
+                    periods: [
+                        {startingDay: false, endingDay: true, color: '#5f9ea0'},
+                        {startingDay: false, endingDay: true, color: '#ffa500'},
+                        {startingDay: true, endingDay: false, color: '#f0e68c'}
+                    ]
                     },
-                    '2022-05-20': {
-                        periods: [
-                            {startingDay: false, endingDay: true, color: 'blue'},
-                            {startingDay: false, endingDay: true, color: 'red'}
-                        ]
-                    },
-                    '2022-05-30': {
-                        periods: []
+                    '2022-05-15': {
+                    periods: [
+                        {startingDay: true, endingDay: false, color: '#ffa500'},
+                        {color: 'transparent'},
+                        {startingDay: false, endingDay: false, color: '#f0e68c'}
+                    ]
                     }
                 }}
-            />
+                onDayPress={(day) => datePressHandler(day)}
+                />
 
             </View>
         </ImageBackground>

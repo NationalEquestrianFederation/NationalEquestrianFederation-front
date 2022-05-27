@@ -1,7 +1,7 @@
 import { Text, ImageBackground, FlatList, TouchableOpacity, StyleSheet, View, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useState, useEffect } from 'react';
-import { globalStyles } from '../styles/global';
-import Card from '../shared/card';
+import { globalStyles } from '../../styles/global';
+import Card from '../../shared/card';
 import AddNews from './AddNews';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
@@ -33,7 +33,7 @@ export default function News({ navigation }) {
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             
             <Modal visible={modalOpen}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

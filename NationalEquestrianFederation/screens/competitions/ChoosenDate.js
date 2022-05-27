@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, ImageBackground, FlatList, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import Card from '../shared/card';
-import { globalStyles } from "../styles/global";
+import Card from '../../shared/card';
+import { globalStyles } from "../../styles/global";
 import axios from 'axios';
 
 export default function ChoosenDate({ navigation }) {
@@ -26,7 +26,7 @@ export default function ChoosenDate({ navigation }) {
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.container}>
                     <Text style={styles.date}>{navigation.getParam('dateString')}</Text>
                 <FlatList data={competitions} renderItem={({ item }) => (

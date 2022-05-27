@@ -1,62 +1,62 @@
-import { Text, ImageBackground, FlatList, StyleSheet, TouchableWithoutFeedback, Keyboard, Modal, View } from 'react-native';
-import Card from '../shared/card';
-import { globalStyles } from '../styles/global';
+import { Text, ImageBackground, FlatList, StyleSheet, View, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import Card from '../../../shared/card';
+import { globalStyles } from '../../../styles/global';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
-import AddHorse from './AddHorse';
-import EditHorse from './EditHorse';
+import AddRidingSchoolOffer from './AddRidingSchoolOffer';
+import EditRidingSchoolOffer from './EditRidingSchoolOffer';
 
-export default function Horses({ navigation }) {
+export default function RidingSchoolOffers({ navigation }) {
 
     const serverUrl = "http://10.0.2.2:8080";
 
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [horses, setHorses] = useState([]);
-    const [editingHorse, setEditingHorse] = useState({});
+    const [offers, setOffers] = useState([]);
+    const [editingOffer, setEdditingOffer] = useState({});
 
     useEffect(() => {
-        getHorses();
+        getOffers();
     }, [])
 
-    const getHorses = () => {
-        axios.get(serverUrl + "/horses?horseClub=0")
+    const getOffers = () => {
+        axios.get(serverUrl + "/ridingSchoolOffers?horseClub=0")
             .then(response => {
-                setHorses(response.data);
+                setOffers(response.data);
             })
     }
 
-    const addHorse = (horse) => {
-        axios.post(serverUrl + "/horses", horse)
+    const deleteOffer = (id) => {
+        axios.delete(serverUrl + "/ridingSchoolOffers/" + id)
+            .then(response => {
+                getOffers();
+            })
+    }
+
+    const addOffer = (offer) => {
+        axios.post(serverUrl + "/ridingSchoolOffers", offer)
             .then(response => {
                 setAddModalOpen(false);
-                getHorses();
+                getOffers();
             })
     }
 
-    const deleteHorse = (id) => {
-        axios.delete(serverUrl + "/horses/" + id)
-            .then(response => {
-                getHorses();
-            })
-    }
-
-    const editHorse = (horse) => {
-        axios.put(serverUrl + "/horses", horse)
+    const editOffer = (offer) => {
+        axios.put(serverUrl + "/ridingSchoolOffers", offer)
             .then(response => {
                 setEditModalOpen(false);
-                getHorses();
+                getOffers();
             })
     }
 
-    const editForm = (horse) => {
-        setEditingHorse(horse);
+    const editForm = (offer) => {
+        setEdditingOffer(offer);
         setEditModalOpen(true);
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../../assets/background.jpg')} style={globalStyles.container} >
 
             <Modal visible={addModalOpen}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -66,7 +66,7 @@ export default function Horses({ navigation }) {
                             size={24} 
                             style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
                             onPress={() => setAddModalOpen(false)} />
-                        <AddHorse addHorse={addHorse}  />
+                        <AddRidingSchoolOffer addOffer={addOffer}  />
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
@@ -78,7 +78,7 @@ export default function Horses({ navigation }) {
                 color="rgba(252, 252, 252, 0.8)"
                 onPress={() => setAddModalOpen(true)} />
 
-            <FlatList data={horses} renderItem={({ item }) => (
+            <FlatList data={offers} renderItem={({ item }) => (
                 <Card>
 
                     <Modal visible={editModalOpen}>
@@ -87,22 +87,31 @@ export default function Horses({ navigation }) {
                                 <MaterialIcons 
                                     name='close' 
                                     size={24} 
-                                    style={{...styles.closeButton, ...styles.modalClose}}
+                                    style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
                                     onPress={() => setEditModalOpen(false)} />
-                                <EditHorse horse={editingHorse} editHorse={editHorse}  />
+                                <EditRidingSchoolOffer offer={editingOffer} editOffer={editOffer}  />
                             </View>
                         </TouchableWithoutFeedback>
                     </Modal>
-                
+
                     <Text style={globalStyles.titleText}>{item.name}</Text>
-                    <Text style={styles.place}>{item.gender}</Text>
+                    <View style={styles.content}>
+                        <Text style={styles.label}>Start</Text>
+                        <Text >{item.startDate}</Text>
+                        <Text></Text>
+                        <Text style={styles.label}>End</Text>
+                        <Text >{item.endDate}</Text>
+                        <Text></Text>
+                        <Text style={styles.label}>Price</Text>
+                        <Text>{item.price}e</Text>
+                    </View>
 
                     <View style={styles.buttons}>
                         <MaterialIcons 
                             name='delete' 
                             size={24} 
                             style={styles.deleteButton} 
-                            onPress={() => deleteHorse(item.id)} />
+                            onPress={() => deleteOffer(item.id)} />
 
                         <MaterialIcons 
                             name='edit' 
@@ -120,6 +129,25 @@ export default function Horses({ navigation }) {
 const styles = StyleSheet.create({
     cards: {
         marginTop: 5
+    },
+    name: {
+        flexDirection: 'row'
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        marginLeft: 3
+    },
+    content: {
+        paddingTop: 10,
+        marginTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#acaeb0',
+    },
+    label: {
+        fontSize: 15,
+        fontWeight: 'bold'
     },
     buttons: {
         flexDirection: 'row',

@@ -1,30 +1,30 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../../styles/global";
 import { useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
 
-export default function AddCompetition({ addCompetition }) {
+export default function AddRidingSchoolOffer({ addOffer }) {
 
     const [name, setName] = useState('');
+    const [price, setPrice] = useState(0);
     const [startDate, setStartDate] = useState(new Date());
     const [openStartDate, setOpenStartDate] = useState(false);
     const [startDateText, setStartDateText] = useState(new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear());
     const [endDate, setEndDate] = useState(new Date());
     const [openEndDate, setOpenEndDate] = useState(false);
     const [endDateText, setEndDateText] = useState(new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear());
-    const [location, setLocation] = useState('');
-    const [discipline, setDiscipline] = useState('');
+    const [description, setDescription] = useState('');
 
-    const addCompetitionHandler = () => {
-        var competition = {
+    const addRidingSchoolOffer = () => {
+        var offer = {
             name: name,
-            startDate: startDateText,
-            endDate: endDateText,
-            location: location,
-            discipline: discipline
+            price: price,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            horseClub: 1
         }
-        addCompetition(competition);
+        addOffer(offer);
     }
 
     const startDateChange = (event, selectedDate) => {
@@ -50,13 +50,31 @@ export default function AddCompetition({ addCompetition }) {
     return (
         <View>
             <ScrollView>
-                <Text style={styles.titleText}>Add competition</Text>
+                <Text style={styles.titleText}>Add riding school offer</Text>
 
                 <TextInput 
                     style={globalStyles.input} 
                     placeholder='Name'
                     onChangeText={(value) => setName(value)}
                     value={name}
+                />
+                <Text></Text>
+
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Description'
+                    multiline
+                    onChangeText={(value) => setDescription(value)}
+                    value={description}
+                />
+                <Text></Text>
+
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Price'
+                    keyboardType="numeric"
+                    onChangeText={(value) => setPrice(value)}
+                    value={price.toString()}
                 />
                 <Text></Text>
 
@@ -85,25 +103,9 @@ export default function AddCompetition({ addCompetition }) {
                     <Text style={globalStyles.dateButtonText}>End date - {endDateText}</Text>
                 </TouchableOpacity>
                 <Text></Text>
-                
-                <TextInput 
-                    style={globalStyles.input} 
-                    placeholder='Location'
-                    onChangeText={(value) => setLocation(value)}
-                    value={location}
-                />
                 <Text></Text>
 
-                <Picker 
-                    selectedValue={discipline}
-                    onValueChange={value => setDiscipline(value)}>
-                    <Picker.Item label="Jumping" value="jumping" />
-                    <Picker.Item label="Dressage" value="dressage" />
-                    <Picker.Item label="Eventing" value="eventing" />
-                </Picker>
-                <Text></Text>
-
-                <Button title="Submit" onPress={addCompetitionHandler} />
+                <Button title="Submit" onPress={addRidingSchoolOffer} />
 
             </ScrollView>
         </View>

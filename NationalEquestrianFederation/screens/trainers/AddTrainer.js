@@ -1,21 +1,21 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../styles/global";
 import { Formik } from 'formik';
 
-export default function EditTrainer({ trainer, editTrainer }) {
+export default function AddTrainer({ addTrainer }) {
 
     return (
         <View>
             <Formik
-                initialValues={{id: trainer.id, name: trainer.name, surname: trainer.surname, dateOfBirth: trainer.dateOfBirth, 
-                        gender: trainer.gender}}
-                    onSubmit={(values, actions) => {
-                    editTrainer(values);
+                initialValues={{name: '', surname: '', dateOfBirth: '', gender: '', horseClub: 1}}
+                onSubmit={(values, actions) => {
+                    actions.resetForm();
+                    addTrainer(values);
                 }}>
                 {(props) => (
                     <ScrollView>
 
-                        <Text style={styles.titleText}>Edit trainer</Text>
+                        <Text style={styles.titleText}>Add trainer</Text>
 
                         <TextInput 
                             style={globalStyles.input} 

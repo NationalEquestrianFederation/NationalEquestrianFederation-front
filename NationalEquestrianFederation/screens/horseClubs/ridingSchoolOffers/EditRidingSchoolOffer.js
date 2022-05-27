@@ -1,5 +1,5 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../../styles/global";
 import { Formik } from 'formik';
 
 export default function EditRidingSchoolOffer({ offer, editOffer }) {

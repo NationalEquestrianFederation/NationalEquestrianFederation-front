@@ -1,34 +1,33 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../styles/global";
 import { Formik } from 'formik';
-import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
+import { useState } from 'react'
 
-export default function EditRider({ rider, editRider }) {
+export default function AddRider({ addRider }) {
 
-    const id = rider.id;
-    const [name, setName] = useState(rider.name);
-    const [surname, setSurname] = useState(rider.surname);
-    const [dateOfBirth, setDateOfBirth] = useState(rider.dateOfBirth);
-    const [gender, setGender] = useState(rider.gender);
-    const [licence, setLicence] = useState(rider.licence);
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [gender, setGender] = useState('');
+    const [licence, setLicence] = useState('');
 
-    const editRiderHandler = () => {
+    const addRiderHandler = () => {
         var rider = {
-            id: id,
             name: name,
             surname: surname,
             dateOfBirth: dateOfBirth,
             gender: gender,
-            licence: licence
+            licence: licence,
+            horseClub: 1
         }
-        editRider(rider);
+        addRider(rider);
     }
 
     return (
         <View>
             <ScrollView>
-                <Text style={styles.titleText}>Edit rider</Text>
+                <Text style={styles.titleText}>Add rider</Text>
 
                 <TextInput 
                     style={globalStyles.input} 
@@ -71,7 +70,7 @@ export default function EditRider({ rider, editRider }) {
                 </Picker>
                 <Text></Text>
 
-                <Button title="Submit" onPress={editRiderHandler} />
+                <Button title="Submit" onPress={addRiderHandler} />
             </ScrollView>
         </View>
     )

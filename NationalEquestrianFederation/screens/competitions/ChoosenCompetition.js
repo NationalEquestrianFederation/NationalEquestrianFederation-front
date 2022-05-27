@@ -1,10 +1,10 @@
 import { StyleSheet, View, ImageBackground, ScrollView, Text } from 'react-native';
-import Card from '../shared/card';
-import { globalStyles } from '../styles/global';
+import Card from '../../shared/card';
+import { globalStyles } from '../../styles/global';
 
 export default function ChoosenCompetition({ navigation }) {
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.container}>
                 <Card>
                     <ScrollView>

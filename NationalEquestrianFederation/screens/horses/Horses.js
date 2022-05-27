@@ -1,62 +1,62 @@
-import { Text, ImageBackground, FlatList, StyleSheet, View, Modal,TouchableWithoutFeedback, Keyboard } from 'react-native';
-import Card from '../shared/card';
-import { globalStyles } from '../styles/global';
+import { Text, ImageBackground, FlatList, StyleSheet, TouchableWithoutFeedback, Keyboard, Modal, View } from 'react-native';
+import Card from '../../shared/card';
+import { globalStyles } from '../../styles/global';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
-import AddRider from './AddRider';
-import EditRider from './EditRider';
+import AddHorse from './AddHorse';
+import EditHorse from './EditHorse';
 
-export default function Riders({ navigation }) {
+export default function Horses({ navigation }) {
 
     const serverUrl = "http://10.0.2.2:8080";
 
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [riders, setRiders] = useState([]);
-    const [editingRider, setEditingRider] = useState({});
+    const [horses, setHorses] = useState([]);
+    const [editingHorse, setEditingHorse] = useState({});
 
     useEffect(() => {
-        getRiders();
+        getHorses();
     }, [])
 
-    const getRiders = () => {
-        axios.get(serverUrl + "/riders?horseClub=0")
+    const getHorses = () => {
+        axios.get(serverUrl + "/horses?horseClub=0")
             .then(response => {
-                setRiders(response.data);
+                setHorses(response.data);
             })
     }
 
-    const deleteRider = (id) => {
-        axios.delete(serverUrl + "/riders/" + id)
-            .then(response => {
-                getRiders();
-            })
-    }
-
-    const addRider = (rider) => {
-        axios.post(serverUrl + "/riders", rider)
+    const addHorse = (horse) => {
+        axios.post(serverUrl + "/horses", horse)
             .then(response => {
                 setAddModalOpen(false);
-                getRiders();
+                getHorses();
             })
     }
 
-    const editRider = (rider) => {
-        axios.put(serverUrl + "/riders", rider)
+    const deleteHorse = (id) => {
+        axios.delete(serverUrl + "/horses/" + id)
+            .then(response => {
+                getHorses();
+            })
+    }
+
+    const editHorse = (horse) => {
+        axios.put(serverUrl + "/horses", horse)
             .then(response => {
                 setEditModalOpen(false);
-                getRiders();
+                getHorses();
             })
     }
 
-    const editForm = (rider) => {
-        setEditingRider(rider);
+    const editForm = (horse) => {
+        setEditingHorse(horse);
         setEditModalOpen(true);
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
 
             <Modal visible={addModalOpen}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -66,7 +66,7 @@ export default function Riders({ navigation }) {
                             size={24} 
                             style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
                             onPress={() => setAddModalOpen(false)} />
-                        <AddRider addRider={addRider}  />
+                        <AddHorse addHorse={addHorse}  />
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
@@ -78,7 +78,7 @@ export default function Riders({ navigation }) {
                 color="rgba(252, 252, 252, 0.8)"
                 onPress={() => setAddModalOpen(true)} />
 
-            <FlatList data={riders} renderItem={({ item }) => (
+            <FlatList data={horses} renderItem={({ item }) => (
                 <Card>
 
                     <Modal visible={editModalOpen}>
@@ -87,27 +87,22 @@ export default function Riders({ navigation }) {
                                 <MaterialIcons 
                                     name='close' 
                                     size={24} 
-                                    style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
+                                    style={{...styles.closeButton, ...styles.modalClose}}
                                     onPress={() => setEditModalOpen(false)} />
-                                <EditRider rider={editingRider} editRider={editRider}  />
+                                <EditHorse horse={editingHorse} editHorse={editHorse}  />
                             </View>
                         </TouchableWithoutFeedback>
                     </Modal>
-
-                    <View style={styles.name}>
-                        <Text style={globalStyles.titleText}>{item.name}</Text>
-                        <Text style={styles.title}>{item.surname}</Text>
-                    </View>
-                    <View style={styles.name}>
-                        <Text>{item.licence}</Text>
-                    </View>
+                
+                    <Text style={globalStyles.titleText}>{item.name}</Text>
+                    <Text style={styles.place}>{item.gender}</Text>
 
                     <View style={styles.buttons}>
                         <MaterialIcons 
                             name='delete' 
                             size={24} 
                             style={styles.deleteButton} 
-                            onPress={() => deleteRider(item.id)} />
+                            onPress={() => deleteHorse(item.id)} />
 
                         <MaterialIcons 
                             name='edit' 
@@ -126,15 +121,6 @@ const styles = StyleSheet.create({
     cards: {
         marginTop: 5
     },
-    name: {
-        flexDirection: 'row'
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        fontStyle: 'italic',
-        marginLeft: 3
-    },
     buttons: {
         flexDirection: 'row',
         alignSelf: 'flex-end'
@@ -143,5 +129,4 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginLeft: 10
     }
-
 })

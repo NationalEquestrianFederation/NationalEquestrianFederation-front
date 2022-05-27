@@ -1,6 +1,6 @@
 import { Text, ImageBackground, FlatList, StyleSheet, View, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import Card from '../shared/card';
-import { globalStyles } from '../styles/global';
+import Card from '../../shared/card';
+import { globalStyles } from '../../styles/global';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ export default function Trainers({ navigation }) {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [trainers, setTrainers] = useState([]);
+    const [editingTrainer, setEditingTrainer] = useState({});
 
     useEffect(() => {
         getTrainers();
@@ -41,6 +42,11 @@ export default function Trainers({ navigation }) {
             })
     }
 
+    const editForm = (trainer) => {
+        setEditingTrainer(trainer);
+        setEditModalOpen(true);
+    }
+
     const addTrainer = (trainer) => {
         axios.post(serverUrl + "/trainers", trainer)
             .then(response => {
@@ -50,7 +56,7 @@ export default function Trainers({ navigation }) {
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
 
             <Modal visible={addModalOpen}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -83,7 +89,7 @@ export default function Trainers({ navigation }) {
                                     size={24} 
                                     style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
                                     onPress={() => setEditModalOpen(false)} />
-                                <EditTrainer trainer={item} editTrainer={editTrainer}  />
+                                <EditTrainer trainer={editingTrainer} editTrainer={editTrainer}  />
                             </View>
                         </TouchableWithoutFeedback>
                     </Modal>
@@ -104,7 +110,7 @@ export default function Trainers({ navigation }) {
                             name='edit' 
                             size={24} 
                             style={styles.deleteButton} 
-                            onPress={() => setEditModalOpen(true)} />
+                            onPress={() => editForm(item)} />
                     </View>
 
                 </Card>

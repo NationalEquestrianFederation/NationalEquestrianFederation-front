@@ -1,6 +1,6 @@
 import { Text, ImageBackground, StyleSheet, ScrollView, TouchableOpacity, Modal, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
-import { globalStyles } from '../styles/global';
-import Card from '../shared/card';
+import { globalStyles } from '../../styles/global';
+import Card from '../../shared/card';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import EditHorseClub from './EditHorseClub';
@@ -36,7 +36,7 @@ export default function ChoosenHorseClub({ navigation }) {
     }
 
     return (
-        <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+        <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <TouchableOpacity onPress={() => navigation.navigate('Horses')}>
                 <Card>
                     <Text style={globalStyles.titleText}>Horses</Text>

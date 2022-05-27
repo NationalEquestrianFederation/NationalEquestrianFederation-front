@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import ChoosenCompetition from '../screens/ChoosenCompetition';
-import ChoosenDate from '../screens/ChoosenDate';
-import CompetitionCalendar from '../screens/CompetitionCalendar';
+import ChoosenCompetition from '../screens/competitions/ChoosenCompetition';
+import ChoosenDate from '../screens/competitions/ChoosenDate';
+import CompetitionCalendar from '../screens/competitions/CompetitionCalendar';
 import Header from '../shared/header';
 
 const screens = {

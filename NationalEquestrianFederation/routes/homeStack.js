@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import Home from '../screens/Home';
-import News from '../screens/News';
-import ChoosenNews from '../screens/ChoosenNews';
+import News from '../screens/news/News';
+import ChoosenNews from '../screens/news/ChoosenNews';
 import Header from '../shared/header';
 
 const screens = {

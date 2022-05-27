@@ -1,31 +1,32 @@
 import { StyleSheet, Button, TextInput, View, Text, ScrollView } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../styles/global";
 import { Formik } from 'formik';
-import { Picker } from '@react-native-picker/picker';
 import { useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
 
-export default function AddHorse({ addHorse }) {
+export default function EditHorse({ horse, editHorse }) {
 
-    const [name, setName] = useState('');
-    const [gender, setGender] = useState('');
-    const [owner, setOwner] = useState('');
-    const [yearOfBirh, setYearOfBirth] = useState('');
+    const id = horse.id;
+    const [name, setName] = useState(horse.name);
+    const [gender, setGender] = useState(horse.gender);
+    const [owner, setOwner] = useState(horse.owner);
+    const [yearOfBirth, setYearOfBirth] = useState(horse.yearOfBirth);
 
-    const addHorseHandler = () => {
+    const editHorseHandler = () => {
         var horse = {
+            id: id,
             name: name,
             gender: gender,
             owner: owner,
-            yearOfBirh: yearOfBirh,
-            horseClub: 1
+            yearOfBirth: yearOfBirth
         }
-        addHorse(horse);
+        editHorse(horse);
     }
 
     return (
         <View>
             <ScrollView>
-                <Text style={styles.titleText}>Add horse</Text>
+                <Text style={styles.titleText}>Edit horse</Text>
 
                 <TextInput 
                     style={globalStyles.input} 
@@ -45,9 +46,10 @@ export default function AddHorse({ addHorse }) {
 
                 <TextInput 
                     style={globalStyles.input} 
+                    keyboardType='numeric'
                     placeholder='Year of birth'
                     onChangeText={(value) => setYearOfBirth(value)}
-                    value={yearOfBirh}
+                    value={yearOfBirth.toString()}
                 />
                 <Text></Text>
 
@@ -59,7 +61,7 @@ export default function AddHorse({ addHorse }) {
                 />
                 <Text></Text>
 
-                <Button title="Submit" onPress={addHorseHandler} />
+                <Button title="Submit" onPress={editHorseHandler} />
             </ScrollView>
         </View>
     )
@@ -74,4 +76,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 10
     },
+    checkbox: {
+        flexDirection: 'row'
+    }
 })
