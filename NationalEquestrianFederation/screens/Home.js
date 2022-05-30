@@ -4,6 +4,9 @@ import { globalStyles } from '../styles/global';
 export default function Home({ navigation }) {
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
+            <TouchableOpacity onPress={() => navigation.navigate('LogIn')}>
+                <Text style={styles.logIn}>Log in</Text>
+            </TouchableOpacity>
             <View style={styles.welcome}>
                 <Text style={styles.text}>National Equestrian Federation</Text>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('News')}>
@@ -28,7 +31,7 @@ const styles = StyleSheet.create({
         fontWeight: '500'
     },
     button: {
-        marginTop: 35,
+        marginTop: 20,
         backgroundColor: 'rgba(252, 252, 252, 0.8)',
         width: 300,
         height: 50,
@@ -39,6 +42,15 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'black',
         fontSize: 20
+    },
+    logIn: {
+        color: 'rgba(252, 252, 252, 0.8)',
+        fontSize: 20,
+        fontWeight: '400',
+        fontStyle: 'italic',
+        alignSelf: 'flex-end',
+        marginRight: 20,
+        marginTop: 10
     }
 })
 

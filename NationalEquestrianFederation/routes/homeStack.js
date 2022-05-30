@@ -3,6 +3,7 @@ import Home from '../screens/Home';
 import News from '../screens/news/News';
 import ChoosenNews from '../screens/news/ChoosenNews';
 import Header from '../shared/header';
+import LogIn from '../screens/LogIn';
 
 const screens = {
     Home: {
@@ -11,6 +12,12 @@ const screens = {
             return {
                 headerTitle: () => <Header title='Welcome to NEF' navigation={navigation} />
             }
+        }
+    },
+    LogIn: {
+        screen: LogIn,
+        navigationOptions: {
+            title: 'Log in'
         }
     },
     News: {
