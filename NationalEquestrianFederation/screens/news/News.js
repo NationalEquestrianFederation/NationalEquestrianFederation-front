@@ -5,6 +5,7 @@ import Card from '../../shared/card';
 import AddNews from './AddNews';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function News({ navigation }) {
 
@@ -17,7 +18,9 @@ export default function News({ navigation }) {
         getNews();
     }, [])
 
-    const getNews = () => {
+    const getNews = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        console.log(token)
         axios.get(serverUrl + "/news?newsType=nationalFederation")
             .then((response) => {
                 setNews(response.data);
