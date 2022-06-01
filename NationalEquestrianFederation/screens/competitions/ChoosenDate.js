@@ -8,6 +8,7 @@ export default function ChoosenDate({ navigation }) {
 
     const serverUrl = "http://10.0.2.2:8080";
 
+    const [date, setDate] = useState('');
     const [competitions, setCompetitions] = useState([]);
 
     useEffect(() => {
@@ -15,9 +16,11 @@ export default function ChoosenDate({ navigation }) {
     }, [])
 
     const getCompetitions = () => {
-        axios.get(serverUrl + "/competitions/" + navigation.getParam('dateString'))
+        var date = navigation.state.params;
+        axios.get(serverUrl + "/competitions/" + date)
             .then(response => {
                 setCompetitions(response.data);
+                setDate(date);
             })
     }
 
@@ -28,7 +31,7 @@ export default function ChoosenDate({ navigation }) {
     return (
         <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.container}>
-                    <Text style={styles.date}>{navigation.getParam('dateString')}</Text>
+                    <Text style={styles.date}>{date}</Text>
                 <FlatList data={competitions} renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => competitionPressHandler(item)} >
                         <Card>
