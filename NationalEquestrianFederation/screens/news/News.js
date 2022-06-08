@@ -6,10 +6,11 @@ import AddNews from './AddNews';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SERVER_URL } from '@env'
 
 export default function News({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080"
+    const serverUrl = "http://192.168.0.15:8080";
 
     const [modalOpen, setModalOpen] = useState(false);
     const [news, setNews] = useState([]);
@@ -19,12 +20,18 @@ export default function News({ navigation }) {
     }, [])
 
     const getNews = async () => {
-        var token = await AsyncStorage.getItem('access_token');
-        console.log(token)
-        axios.get(serverUrl + "/news?newsType=nationalFederation")
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json', 
+            'X-Requested-From': 'MOBILE',
+          }
+        //var token = await AsyncStorage.getItem('access_token');
+        console.log(SERVER_URL)
+        axios.get(serverUrl + "/news?newsType=nationalFederation", {headers: headers})
             .then((response) => {
                 setNews(response.data);
             })
+            .catch(error => console.log(error))
     }
 
     const addNews = (news) => {

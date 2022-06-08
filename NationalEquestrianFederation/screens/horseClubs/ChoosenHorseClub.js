@@ -57,6 +57,11 @@ export default function ChoosenHorseClub({ navigation }) {
                     <Text style={globalStyles.titleText}>Trainers</Text>
                 </Card>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('HorseClubLocation')}>
+                <Card>
+                    <Text style={globalStyles.titleText}>Location</Text>
+                </Card>
+            </TouchableOpacity>
 
             <Modal visible={modalOpen}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
