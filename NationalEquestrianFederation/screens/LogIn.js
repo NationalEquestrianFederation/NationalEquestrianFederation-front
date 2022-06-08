@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { globalStyles } from '../styles/global';
 import axios from 'axios';
 import { setStatusBarStyle } from 'expo-status-bar';
+import jwt_decode from 'jwt-decode'
 
 export default function LogIn({ navigation }) {
 
@@ -29,6 +30,8 @@ export default function LogIn({ navigation }) {
         axios.post(serverUrl + "/authentication/login", user)
             .then(response => {
                 var token = response.data.accessToken;
+                var decodedToken = jwt_decode(token);
+                console.log(decodedToken);
                 setToken(token);
                 setUsername('');
                 setPassword('');

@@ -6,19 +6,29 @@ import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
 import AddTrainer from './AddTrainer';
 import EditTrainer from './EditTrainer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function Trainers({ navigation }) {
 
     const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole] = useState("");
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [trainers, setTrainers] = useState([]);
     const [editingTrainer, setEditingTrainer] = useState({});
 
     useEffect(() => {
+        setRoleName();
         getTrainers();
     }, [])
+
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
 
     const getTrainers = () => {
         console.log(process.env.SERVER_URL);
@@ -72,12 +82,15 @@ export default function Trainers({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            <MaterialIcons 
-                name='add' 
-                size={24} 
-                style={globalStyles.addButton}
-                color="rgba(252, 252, 252, 0.8)"
-                onPress={() => setAddModalOpen(true)} />
+            {role === "ROLE_NATIONAL_FEDERATION" && (
+                <MaterialIcons 
+                    name='add' 
+                    size={24} 
+                    style={globalStyles.addButton}
+                    color="rgba(252, 252, 252, 0.8)"
+                    onPress={() => setAddModalOpen(true)}
+                />
+            )}
 
             <FlatList data={trainers} renderItem={({ item }) => (
                 <Card>
@@ -101,17 +114,24 @@ export default function Trainers({ navigation }) {
                     </View>
 
                     <View style={styles.buttons}>
-                        <MaterialIcons 
-                            name='delete' 
-                            size={24} 
-                            style={styles.deleteButton} 
-                            onPress={() => deleteTrainer(item.id)} />
+                        {role === "ROLE_NATIONAL_FEDERATION" && (
+                            <MaterialIcons 
+                                name='delete' 
+                                size={24} 
+                                style={styles.deleteButton} 
+                                onPress={() => deleteTrainer(item.id)}
+                            />
+                        )}
 
-                        <MaterialIcons 
-                            name='edit' 
-                            size={24} 
-                            style={styles.deleteButton} 
-                            onPress={() => editForm(item)} />
+                        {role === "ROLE_NATIONAL_FEDERATION" && (
+                            <MaterialIcons 
+                                name='edit' 
+                                size={24} 
+                                style={styles.deleteButton} 
+                                onPress={() => editForm(item)}
+                            />
+                        )}
+
                     </View>
 
                 </Card>

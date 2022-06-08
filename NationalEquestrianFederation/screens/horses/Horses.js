@@ -6,19 +6,29 @@ import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
 import AddHorse from './AddHorse';
 import EditHorse from './EditHorse';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function Horses({ navigation }) {
 
     const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole] = useState("");
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [horses, setHorses] = useState([]);
     const [editingHorse, setEditingHorse] = useState({});
 
     useEffect(() => {
+        setRoleName();
         getHorses();
     }, [])
+
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
 
     const getHorses = () => {
         console.log(process.env.SERVER_URL);
@@ -72,12 +82,15 @@ export default function Horses({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            <MaterialIcons 
-                name='add' 
-                size={24} 
-                style={globalStyles.addButton}
-                color="rgba(252, 252, 252, 0.8)"
-                onPress={() => setAddModalOpen(true)} />
+            {role === "ROLE_HORSE_CLUB" && (
+                <MaterialIcons 
+                    name='add' 
+                    size={24} 
+                    style={globalStyles.addButton}
+                    color="rgba(252, 252, 252, 0.8)"
+                    onPress={() => setAddModalOpen(true)} 
+                />
+            )}
 
             <FlatList data={horses} renderItem={({ item }) => (
                 <Card>
@@ -99,17 +112,24 @@ export default function Horses({ navigation }) {
                     <Text style={styles.place}>{item.gender}</Text>
 
                     <View style={styles.buttons}>
-                        <MaterialIcons 
-                            name='delete' 
-                            size={24} 
-                            style={styles.deleteButton} 
-                            onPress={() => deleteHorse(item.id)} />
+                        {role === "ROLE_HORSE_CLUB" && (
+                            <MaterialIcons 
+                                name='delete' 
+                                size={24} 
+                                style={styles.deleteButton} 
+                                onPress={() => deleteHorse(item.id)}
+                            />
+                        )}
 
-                        <MaterialIcons 
-                            name='edit' 
-                            size={24} 
-                            style={styles.deleteButton} 
-                            onPress={() => editForm(item)} />
+                        {role === "ROLE_HORSE_CLUB" && (
+                            <MaterialIcons 
+                                name='edit' 
+                                size={24} 
+                                style={styles.deleteButton} 
+                                onPress={() => editForm(item)}
+                            />
+                        )}
+                        
                     </View>
 
                 </Card>

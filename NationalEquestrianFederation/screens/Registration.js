@@ -22,7 +22,8 @@ export default function Registration({ navigation }) {
     const logIn = () => {
         var user = {
             username: username,
-            password: password
+            password: password,
+            role: "ROLE_NATIONAL_FEDERATION"
         }
 
         axios.post(serverUrl + "/authentication/register", user)

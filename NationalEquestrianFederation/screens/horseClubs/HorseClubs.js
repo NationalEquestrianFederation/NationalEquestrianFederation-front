@@ -5,17 +5,27 @@ import Card from '../../shared/card';
 import AddHorseClub from './AddHorseClub';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function HorseClubs({ navigation }) {
 
     const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole]= useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const [clubs, setClubs] = useState([]);
 
     useEffect(() => {
+        setRoleName();
         getHorseClubs();
     }, [])
+
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
 
     const getHorseClubs = () => {
         console.log(process.env.SERVER_URL)
@@ -53,12 +63,15 @@ export default function HorseClubs({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            <MaterialIcons 
-                name='add' 
-                size={24} 
-                style={styles.addButton}
-                color="rgba(252, 252, 252, 0.8)"
-                onPress={() => setModalOpen(true)} />
+            {role === "ROLE_NATIONAL_FEDERATION" && (
+                <MaterialIcons 
+                    name='add' 
+                    size={24} 
+                    style={styles.addButton}
+                    color="rgba(252, 252, 252, 0.8)"
+                    onPress={() => setModalOpen(true)} 
+                />
+            )}
             
             <FlatList data={clubs} renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => horseClubPressHandler(item)} >

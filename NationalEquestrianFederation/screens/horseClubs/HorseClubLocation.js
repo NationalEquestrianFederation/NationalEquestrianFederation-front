@@ -4,18 +4,29 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function HorseClubLocation({ navigation }) {
 
+    const [role, setRole] = useState("");
     const [longitude, setLongitude] = useState(19.843904);
     const [latitude, setLatitude] = useState(45.263938);
     const [address, setAddress] = useState("");
 
     useEffect(() => {
+        setRoleName();
+
         var initLatitude = 45.263938;
         var initLongitude = 19.843904;
         setLocation(initLatitude, initLongitude);
     }, [])
+
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
 
     const setLocation = async (latitude, longitude) => {
 
@@ -38,10 +49,12 @@ export default function HorseClubLocation({ navigation }) {
     }
 
     const moveMarker = (e) => {
-        var latlng = e.nativeEvent.coordinate;
-        setLatitude(latlng.latitude);
-        setLongitude(latlng.longitude);
-        setLocation(latlng.latitude, latlng.longitude);
+        if(role === "ROLE_NATIONAL_FEDERATION") {
+            var latlng = e.nativeEvent.coordinate;
+            setLatitude(latlng.latitude);
+            setLongitude(latlng.longitude);
+            setLocation(latlng.latitude, latlng.longitude);
+        }        
     }
 
     return (

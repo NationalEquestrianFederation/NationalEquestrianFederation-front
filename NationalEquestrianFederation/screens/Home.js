@@ -1,16 +1,36 @@
 import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import { globalStyles } from '../styles/global';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function Home({ navigation }) {
+
+    const [role, setRole] = useState("");
+
+    useEffect(() => {
+        checkUser();
+    }, [])
+    
+    const checkUser = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
+
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.buttons}>
-                <TouchableOpacity onPress={() => navigation.navigate('LogIn')}>
-                    <Text style={styles.logIn}>Log in</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
-                    <Text style={styles.logIn}>Register</Text>
-                </TouchableOpacity>
+                {role === "" && (
+                    <TouchableOpacity onPress={() => navigation.navigate('LogIn')}>
+                        <Text style={styles.logIn}>Log in</Text>
+                    </TouchableOpacity>
+                )}
+                {role === "" && (
+                    <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
+                        <Text style={styles.logIn}>Register</Text>
+                    </TouchableOpacity>
+                )}
             </View>
             <View style={styles.welcome}>
                 <Text style={styles.text}>National Equestrian Federation</Text>

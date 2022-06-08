@@ -32,13 +32,19 @@ const screens = {
         screen: Riders
     },
     RidingSchoolOffers: {
-        screen: RidingSchoolOffers
+        screen: RidingSchoolOffers,
+        navigationOptions: {
+            title: 'Riding school offers'
+        }
     },
     Trainers: {
         screen: Trainers
     },
     HorseClubLocation: {
-        screen: HorseClubLocation
+        screen: HorseClubLocation,
+        navigationOptions: {
+            title: 'Location'
+        }
     }
 }
 

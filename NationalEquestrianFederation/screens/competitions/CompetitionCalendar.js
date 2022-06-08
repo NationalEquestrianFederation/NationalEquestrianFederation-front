@@ -7,11 +7,14 @@ import AddCompetition from './AddCompetition';
 import { MaterialIcons } from '@expo/vector-icons';
 import Card from '../../shared/card';
 import CalendarWeek from '../../shared/calendarWeek';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function CompetitionCalendar({ navigation }) {
 
     const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole] = useState("");
     const [competitions, setCompetitions] = useState([]);
     const [dates, setDates] = useState([]);
     const [weekDates, setWeekDates] = useState([]);
@@ -22,11 +25,16 @@ export default function CompetitionCalendar({ navigation }) {
     const weeks = [0, 1, 2, 3, 4, 5];
     const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-    const [role, setRole] = useState('nationalFederation');    
-
     useEffect(() => {
+        setRoleName();
         getDates();
     }, [])
+
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
 
     const getDates = () => {
         console.log(process.env.SERVER_URL)
@@ -71,7 +79,7 @@ export default function CompetitionCalendar({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            {(role === 'nationalFederation' || role === 'cityFederation') && (
+            {(role === 'ROLE_NATIONAL_FEDERATION' || role === 'ROLE_CITY_FEDERATION') && (
                 <MaterialIcons 
                     name='add' 
                     size={24} 
