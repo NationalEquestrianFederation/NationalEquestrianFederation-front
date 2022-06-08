@@ -9,7 +9,7 @@ import EditTrainer from './EditTrainer';
 
 export default function Trainers({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -21,6 +21,7 @@ export default function Trainers({ navigation }) {
     }, [])
 
     const getTrainers = () => {
+        console.log(process.env.SERVER_URL);
         axios.get(serverUrl + "/trainers?horseClub=0")
             .then(response => {
                 setTrainers(response.data);

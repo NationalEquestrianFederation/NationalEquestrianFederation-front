@@ -10,7 +10,7 @@ import CalendarWeek from '../../shared/calendarWeek';
 
 export default function CompetitionCalendar({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
     const [competitions, setCompetitions] = useState([]);
     const [dates, setDates] = useState([]);
@@ -29,6 +29,7 @@ export default function CompetitionCalendar({ navigation }) {
     }, [])
 
     const getDates = () => {
+        console.log(process.env.SERVER_URL)
         axios.get(serverUrl + "/calendar?month=4&year=2022")
             .then(response => {
                 setDates(response.data);

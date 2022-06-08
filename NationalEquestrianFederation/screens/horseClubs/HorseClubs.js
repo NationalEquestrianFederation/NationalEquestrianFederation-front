@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function HorseClubs({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [clubs, setClubs] = useState([]);
@@ -18,6 +18,7 @@ export default function HorseClubs({ navigation }) {
     }, [])
 
     const getHorseClubs = () => {
+        console.log(process.env.SERVER_URL)
         axios.get(serverUrl + "/horseClubs?name=")
             .then(response => {
                 setClubs(response.data);

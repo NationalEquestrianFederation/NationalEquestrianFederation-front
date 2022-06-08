@@ -6,7 +6,7 @@ import axios from 'axios';
 
 export default function ChoosenDate({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
     const [date, setDate] = useState('');
     const [competitions, setCompetitions] = useState([]);
@@ -16,6 +16,7 @@ export default function ChoosenDate({ navigation }) {
     }, [])
 
     const getCompetitions = () => {
+        console.log(process.env.SERVER_URL)
         var date = navigation.state.params;
         axios.get(serverUrl + "/competitions/" + date)
             .then(response => {
