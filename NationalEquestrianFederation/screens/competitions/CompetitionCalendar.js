@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, Modal, TouchableWithoutFeedback, Keyboard, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Modal, TouchableWithoutFeedback, Keyboard, FlatList, TouchableOpacity } from 'react-native';
 import { Calendar, CaledarList, Agenda } from 'react-native-calendars';
 import { globalStyles } from '../../styles/global';
 import axios from 'axios';
@@ -20,6 +20,8 @@ export default function CompetitionCalendar({ navigation }) {
     const [weekDates, setWeekDates] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [competitionsInDay, setCompetitionsInDay] = useState([]);
+    const [month, setMonth] = useState(new Date().getMonth());
+    const [year, setYear] = useState(new Date().getFullYear());
 
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "November", "December"];
     const weeks = [0, 1, 2, 3, 4, 5];
@@ -28,7 +30,7 @@ export default function CompetitionCalendar({ navigation }) {
     useEffect(() => {
         setRoleName();
         getDates();
-    }, [])
+    }, [month])
 
     const setRoleName = async () => {
         var token = await AsyncStorage.getItem('access_token');
@@ -38,15 +40,10 @@ export default function CompetitionCalendar({ navigation }) {
 
     const getDates = () => {
         console.log(process.env.SERVER_URL)
-        axios.get(serverUrl + "/calendar?month=4&year=2022")
+        axios.get(serverUrl + "/calendar?month=" + month + "&year=" + year)
             .then(response => {
                 setDates(response.data);
             })
-    }
-
-    const datePressHandler = (day) => {
-        console.log(day.dateString)
-        navigation.navigate('ChoosenDate', day)
     }
 
     const getWeekDates = (week) => {
@@ -59,7 +56,27 @@ export default function CompetitionCalendar({ navigation }) {
         axios.post(serverUrl + "/competitions", competition)
             .then(response => {
                 setModalOpen(false);
+                getDates();
             })
+    }
+
+    const previousMonth = () => {
+        console.log(month)
+        if(month - 1 == 0) {
+            setMonth(12);
+            setYear(year - 1);
+        } else {
+            setMonth(month - 1);
+        }
+    }
+
+    const nextMonth = () => {
+        if(month + 1 == 12) {
+            setMonth(1);
+            setYear(year + 1);
+        } else {
+            setMonth(month + 1);
+        }
     }
 
     return (
@@ -73,7 +90,8 @@ export default function CompetitionCalendar({ navigation }) {
                             name='close' 
                             size={24} 
                             style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
-                            onPress={() => setModalOpen(false)} />
+                            onPress={() => setModalOpen(false)}
+                        />
                         <AddCompetition addCompetition={addCompetition}  />
                     </View>
                 </TouchableWithoutFeedback>
@@ -91,7 +109,19 @@ export default function CompetitionCalendar({ navigation }) {
 
             <Card >
                 <View style={styles.calendarHeader}>
-                    <Text>May 2022</Text>
+                    <MaterialIcons 
+                        name='arrow-back' 
+                        size={20} 
+                        onPress={() => previousMonth()}
+                        style={styles.previousMonth}
+                    />
+                    <Text>{months[month]} {year}</Text>
+                    <MaterialIcons 
+                        name='arrow-forward' 
+                        size={20} 
+                        onPress={() => nextMonth()}
+                        style={styles.nextMonth}
+                    />
                 </View>
                 <FlatList data={weekDays} horizontal style={styles.week} renderItem={({ item }) => (
                     <View style={styles.card}>
@@ -142,5 +172,11 @@ const styles = StyleSheet.create({
     },
     weekDates: {
         marginLeft: -12,
+    },
+    previousMonth: {
+        marginRight: 25
+    },
+    nextMonth: {
+        marginLeft: 25
     }
 })

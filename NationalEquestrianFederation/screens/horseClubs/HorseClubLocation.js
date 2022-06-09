@@ -88,8 +88,10 @@ const styles = StyleSheet.create({
     },
     address: {
         alignSelf: 'center',
-        marginTop: 10,
+        marginTop: 15,
+        marginBottom: -6,
         fontSize: 20,
-        color: '#333',
+        color: 'white',
+        fontStyle: 'italic'
     }
 })
