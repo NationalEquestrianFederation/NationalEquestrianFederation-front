@@ -7,7 +7,7 @@ export default function AddHorseClub({ addHorseClub }) {
     return (
         <View>
             <Formik
-                initialValues={{name: '', description: '', address: '', email: '', phone: '', owner: 1}}
+                initialValues={{name: '', description: '',  email: '', phone: ''}}
                 onSubmit={(values, actions) => {
                     actions.resetForm();
                     addHorseClub(values);
@@ -25,15 +25,6 @@ export default function AddHorseClub({ addHorseClub }) {
                             onBlur={props.handleBlur('name')}
                         />
                         <Text style={globalStyles.errorText}>{props.touched.name && props.errors.name}</Text>
-
-                        <TextInput 
-                            style={globalStyles.input} 
-                            placeholder='Club location'
-                            onChangeText={props.handleChange('address')}
-                            value={props.values.address}
-                            onBlur={props.handleBlur('address')}
-                        />
-                        <Text style={globalStyles.errorText}>{props.touched.address && props.errors.address}</Text>
 
                         <TextInput 
                             style={globalStyles.input} 

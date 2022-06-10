@@ -6,9 +6,14 @@ import { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from 'jwt-decode';
+import axios from 'axios';
 
 export default function HorseClubLocation({ navigation }) {
 
+    const serverUrl = process.env.SERVER_URL;
+
+    const [club, setClub] = useState({});
+    const horseClubId = navigation.getParam('id');
     const [role, setRole] = useState("");
     const [longitude, setLongitude] = useState(19.843904);
     const [latitude, setLatitude] = useState(45.263938);
@@ -16,16 +21,39 @@ export default function HorseClubLocation({ navigation }) {
 
     useEffect(() => {
         setRoleName();
+        setHorseClub();
 
         var initLatitude = 45.263938;
         var initLongitude = 19.843904;
-        setLocation(initLatitude, initLongitude);
+        if(navigation.getParam('address') != ""){
+            setInitLocation();
+            initLatitude = navigation.getParam('latitude');
+            initLongitude = navigation.getParam('longitude')
+        }
+        //setLocation(initLatitude, initLongitude);
     }, [])
 
     const setRoleName = async () => {
         var token = await AsyncStorage.getItem('access_token');
         var decodedToken = jwt_decode(token);
         setRole(decodedToken.role);
+    }
+
+    const setHorseClub = () => {
+        axios.get(serverUrl + "/horseClubs/" + horseClubId)
+            .then(response => {
+                var horseClub = response.data;
+                setClub(horseClub);
+                setAddress(horseClub.address);
+                setLongitude(horseClub.longitude);
+                setLatitude(horseClub.latitude);
+            })
+    }
+
+    const setInitLocation = () => {
+        setAddress(navigation.getParam('address'));
+        setLatitude(navigation.getParam('latitude'));
+        setLongitude(navigation.getParam('longitude'));
     }
 
     const setLocation = async (latitude, longitude) => {
@@ -49,12 +77,29 @@ export default function HorseClubLocation({ navigation }) {
     }
 
     const moveMarker = (e) => {
-        if(role === "ROLE_NATIONAL_FEDERATION") {
+        if(role === "ROLE_HORSE_CLUB") {
             var latlng = e.nativeEvent.coordinate;
             setLatitude(latlng.latitude);
             setLongitude(latlng.longitude);
             setLocation(latlng.latitude, latlng.longitude);
+            updateLocation(latlng.longitude, latlng.latitude);
         }        
+    }
+
+    const updateLocation = (lng, lat) => {
+        var location = {
+            horseClubId: horseClubId,
+            address: address,
+            longitude: lng,
+            latitude: lat
+        }
+        
+        axios.put(serverUrl + "/horseClubs/location", location)
+            .then(response => {
+                console.log(response.data);
+                setLocation(lat, lng);
+                setHorseClub();
+            })
     }
 
     return (

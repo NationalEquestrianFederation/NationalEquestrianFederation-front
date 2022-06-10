@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode';
 export default function Home({ navigation }) {
 
     const [role, setRole] = useState("");
+    const [logged, setLogged] = useState(false);
 
     useEffect(() => {
         checkUser();
@@ -15,20 +16,36 @@ export default function Home({ navigation }) {
     const checkUser = async () => {
         var token = await AsyncStorage.getItem('access_token');
         var decodedToken = jwt_decode(token);
-        setRole(decodedToken.role);
+        if(token !== null) {
+            setLogged(true);
+            setRole(decodedToken.role);
+        } else {
+            setLogged(false);
+        }
+        
+    }
+
+    const logOut = async () => {
+        await AsyncStorage.removeItem('access_token');
+        setLogged(false);
     }
 
     return (
         <ImageBackground source={require('../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.buttons}>
-                {role === "" && (
+                {!logged && (
                     <TouchableOpacity onPress={() => navigation.navigate('LogIn')}>
                         <Text style={styles.logIn}>Log in</Text>
                     </TouchableOpacity>
                 )}
-                {role === "" && (
+                {!logged && (
                     <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
                         <Text style={styles.logIn}>Register</Text>
+                    </TouchableOpacity>
+                )}
+                {logged && (
+                    <TouchableOpacity onPress={() => logOut()}>
+                        <Text style={styles.logIn}>Log out</Text>
                     </TouchableOpacity>
                 )}
             </View>

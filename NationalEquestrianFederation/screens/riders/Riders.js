@@ -31,7 +31,7 @@ export default function Riders({ navigation }) {
     }
 
     const getRiders = () => {
-        console.log(process.env.SERVER_URL);
+        console.log(process.env.SERVER_URL)
         axios.get(serverUrl + "/riders?horseClub=0")
             .then(response => {
                 setRiders(response.data);
@@ -45,8 +45,20 @@ export default function Riders({ navigation }) {
             })
     }
 
-    const addRider = (rider) => {
-        axios.post(serverUrl + "/riders", rider)
+    const addRider = async (rider) => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        var ownerId = decodedToken.id;
+
+        var newRider = {
+            name: rider.name,
+            surname: rider.surname,
+            dateOfBirth: rider.dateOfBirth,
+            gender: rider.gender,
+            licence: rider.licence,
+            ownerId: ownerId
+        }
+        axios.post(serverUrl + "/riders", newRider)
             .then(response => {
                 setAddModalOpen(false);
                 getRiders();
@@ -109,12 +121,14 @@ export default function Riders({ navigation }) {
                     </Modal>
 
                     <View style={styles.name}>
-                        <Text style={globalStyles.titleText}>{item.name}</Text>
-                        <Text style={styles.title}>{item.surname}</Text>
+                        <Text style={styles.titleLabel}>{item.name} {item.surname}</Text>
                     </View>
-                    <View style={styles.name}>
-                        <Text>{item.licence}</Text>
-                    </View>
+                    <Text style={styles.label}>* Date of birth</Text>
+                    <Text>{item.dateOfBirth}</Text>
+                    <Text style={styles.label}>* Gender</Text>
+                    <Text >{item.gender}</Text>
+                    <Text style={styles.label}>* Licence</Text>
+                    <Text >{item.licence}</Text>
 
                     <View style={styles.buttons}>
                         {role === "ROLE_HORSE_CLUB" && (
@@ -151,10 +165,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     title: {
-        fontSize: 18,
+        fontSize: 12,
+        color: 'white',
+        marginLeft: 17,
+        marginTop: -3,
+        fontStyle: 'italic'
+    },  
+    titleLabel: {
+        fontSize: 25,
         fontWeight: 'bold',
-        fontStyle: 'italic',
-        marginLeft: 3
+        fontStyle: 'italic'
+    },
+    label: {
+        marginTop: 10,
+        fontSize: 17,
+        fontWeight: 'bold'
     },
     buttons: {
         flexDirection: 'row',

@@ -16,7 +16,7 @@ export default function AddHorse({ addHorse }) {
             name: name,
             gender: gender,
             owner: owner,
-            yearOfBirh: yearOfBirh,
+            yearOfBirth: yearOfBirh,
             horseClub: 1
         }
         addHorse(horse);

@@ -13,6 +13,7 @@ export default function Trainers({ navigation }) {
 
     const serverUrl = process.env.SERVER_URL;
 
+    const horseClub = navigation.getParam('id');
     const [role, setRole] = useState("");
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -31,7 +32,6 @@ export default function Trainers({ navigation }) {
     }
 
     const getTrainers = () => {
-        console.log(process.env.SERVER_URL);
         axios.get(serverUrl + "/trainers?horseClub=0")
             .then(response => {
                 setTrainers(response.data);
@@ -59,6 +59,13 @@ export default function Trainers({ navigation }) {
     }
 
     const addTrainer = (trainer) => {
+        var trainer = {
+            name: trainer.name,
+            surname: trainer.surname,
+            dateOfBirth: trainer.dateOfBirth,
+            gender: trainer.gender,
+        }
+
         axios.post(serverUrl + "/trainers", trainer)
             .then(response => {
                 setAddModalOpen(false);
@@ -108,10 +115,11 @@ export default function Trainers({ navigation }) {
                         </TouchableWithoutFeedback>
                     </Modal>
 
-                    <View style={styles.name}>
-                        <Text style={globalStyles.titleText}>{item.name}</Text>
-                        <Text style={styles.title}>{item.surname}</Text>
-                    </View>
+                    <Text style={styles.titleLabel}>{item.name} {item.surname}</Text>
+                    <Text style={styles.label}>* Date of birth</Text>
+                    <Text>{item.dateOfBirth}</Text>
+                    <Text style={styles.label}>* Gender</Text>
+                    <Text >{item.gender}</Text>
 
                     <View style={styles.buttons}>
                         {role === "ROLE_NATIONAL_FEDERATION" && (
@@ -160,6 +168,23 @@ const styles = StyleSheet.create({
     deleteButton: {
         alignSelf: 'flex-end',
         marginLeft: 10
-    }
+    },
+    title: {
+        fontSize: 12,
+        color: 'white',
+        marginLeft: 17,
+        marginTop: -3,
+        fontStyle: 'italic'
+    },  
+    titleLabel: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        fontStyle: 'italic'
+    },
+    label: {
+        marginTop: 10,
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
 
 })

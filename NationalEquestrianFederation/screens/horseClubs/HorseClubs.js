@@ -32,6 +32,7 @@ export default function HorseClubs({ navigation }) {
         axios.get(serverUrl + "/horseClubs?name=")
             .then(response => {
                 setClubs(response.data);
+                console.log(response.data)
             })
     }
 

@@ -38,6 +38,17 @@ export default function ChoosenDate({ navigation }) {
                         <Card>
                             <Text style={globalStyles.titleDate}>{item.startDate} - {item.endDate}</Text>
                             <Text style={globalStyles.titleText}>{item.name}</Text>
+                            <View>
+                                {item.discipline === "jumping" && (
+                                    <View style={styles.jumping}></View>
+                                )}
+                                {item.discipline === "dressage" && (
+                                    <View style={styles.dressage}></View>
+                                )}
+                                {item.discipline === "eventing" && (
+                                    <View style={styles.eventing}></View>
+                                )}
+                            </View>
                         </Card>
                     </TouchableOpacity>
                     )} style={styles.cards}/>
@@ -60,6 +71,27 @@ const styles = StyleSheet.create({
     },
     cards: {
         marginTop: 15
+    },
+    jumping: {
+        height: 1,
+        width: 40,
+        borderTopColor: 'lightgreen',
+        borderTopWidth: 4,
+        marginBottom: 2
+    },
+    dressage: {
+        height: 1,
+        width: 40,
+        borderTopColor: 'skyblue',
+        borderTopWidth: 4,
+        marginBottom: 2
+    },
+    eventing: {
+        height: 1,
+        width: 40,
+        borderTopColor: 'pink',
+        borderTopWidth: 4,
+        marginBottom: 2
     }
 
 })

@@ -31,7 +31,6 @@ export default function RidingSchoolOffers({ navigation }) {
     }
 
     const getOffers = () => {
-        console.log(process.env.SERVER_URL);
         axios.get(serverUrl + "/ridingSchoolOffers?horseClub=0")
             .then(response => {
                 setOffers(response.data);

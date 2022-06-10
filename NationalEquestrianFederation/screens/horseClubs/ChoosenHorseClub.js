@@ -22,7 +22,9 @@ export default function ChoosenHorseClub({ navigation }) {
         address: navigation.getParam('address'),
         description: navigation.getParam('description'),
         email: navigation.getParam('email'),
-        phone: navigation.getParam('phone')
+        phone: navigation.getParam('phone'),
+        longitude: navigation.getParam('longitude'),
+        latitude: navigation.getParam('latitude')
     });
 
     useEffect(() => {
@@ -54,32 +56,32 @@ export default function ChoosenHorseClub({ navigation }) {
     return (
         <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.icons}>
-                <TouchableOpacity onPress={() => navigation.navigate('Horses')} >
+                <TouchableOpacity onPress={() => navigation.navigate('Horses', club)} >
                     <Icon>
                         <Image source={require('../../assets/horse-icon.png')}/>
                     </Icon>
                     <Text style={styles.title}>Horses</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Riders')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Riders', club)}>
                     <Icon>
                         <Image style={styles.rider} source={require('../../assets/rider-icon.png')}/>
                     </Icon>
                     <Text style={styles.title}>Riders</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('RidingSchoolOffers')}>
+                <TouchableOpacity onPress={() => navigation.navigate('RidingSchoolOffers', club)}>
                     <Icon>
                         <Image style={styles.ridingSchool} source={require('../../assets/riding-school-icon.png')}/>
                     </Icon>
                     <Text style={styles.title}>Riding</Text>
                     <Text style={styles.title}>School</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Trainers')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Trainers', club)}>
                     <Icon>
                         <Image style={styles.rider} source={require('../../assets/trainer-icon.png')}/>
                     </Icon>
                     <Text style={styles.title}>Trainers</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('HorseClubLocation')}>
+                <TouchableOpacity onPress={() => navigation.navigate('HorseClubLocation', club)}>
                     <Icon>
                         <MaterialIcons 
                             name='location-pin' 
@@ -133,10 +135,11 @@ export default function ChoosenHorseClub({ navigation }) {
 
 const styles = StyleSheet.create({
     icons: {
-        marginLeft: -2,
+        marginLeft: -5,
         marginTop: 10,
         flexDirection: 'row',
-        marginBottom: 20
+        marginBottom: 20,
+        alignSelf: 'center'
     },
     title: {
         fontSize: 12,

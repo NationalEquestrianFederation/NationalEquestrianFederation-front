@@ -13,6 +13,7 @@ export default function Horses({ navigation }) {
 
     const serverUrl = process.env.SERVER_URL;
 
+    const horseClub = navigation.getParam('id');
     const [role, setRole] = useState("");
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -31,14 +32,24 @@ export default function Horses({ navigation }) {
     }
 
     const getHorses = () => {
-        console.log(process.env.SERVER_URL);
-        axios.get(serverUrl + "/horses?horseClub=0")
+        console.log(process.env.SERVER_URL)
+        console.log(navigation.getParam('id'))
+        axios.get(serverUrl + "/horses?horseClub=" + horseClub)
             .then(response => {
                 setHorses(response.data);
             })
     }
 
     const addHorse = (horse) => {
+        console.log(horse);
+        var horse = {
+            horseClubId: navigation.getParam('id'),
+            name: horse.name,
+            gender: horse.gender,
+            owner: horse.owner,
+            yearOfBirth: horse.yearOfBirth
+        }
+
         axios.post(serverUrl + "/horses", horse)
             .then(response => {
                 setAddModalOpen(false);
@@ -108,8 +119,13 @@ export default function Horses({ navigation }) {
                         </TouchableWithoutFeedback>
                     </Modal>
                 
-                    <Text style={globalStyles.titleText}>{item.name}</Text>
-                    <Text style={styles.place}>{item.gender}</Text>
+                    <Text style={styles.titleLabel}>{item.name}</Text>
+                    <Text style={styles.label}>* Gender</Text>
+                    <Text >{item.gender}</Text>
+                    <Text style={styles.label}>* Year of birth</Text>
+                    <Text>{item.yearOfBirth}</Text>
+                    <Text style={styles.label}>* Owner</Text>
+                    <Text>{item.owner}</Text>
 
                     <View style={styles.buttons}>
                         {role === "ROLE_HORSE_CLUB" && (
@@ -149,5 +165,22 @@ const styles = StyleSheet.create({
     deleteButton: {
         alignSelf: 'flex-end',
         marginLeft: 10
-    }
+    },
+    title: {
+        fontSize: 12,
+        color: 'white',
+        marginLeft: 17,
+        marginTop: -3,
+        fontStyle: 'italic'
+    },  
+    titleLabel: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        fontStyle: 'italic'
+    },
+    label: {
+        marginTop: 10,
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
 })
