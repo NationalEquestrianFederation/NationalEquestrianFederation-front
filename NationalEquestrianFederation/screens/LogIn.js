@@ -1,15 +1,25 @@
 import { Text, Button, View, ImageBackground, TouchableOpacity, TextInput, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { globalStyles } from '../styles/global';
 import axios from 'axios';
+import { setStatusBarStyle } from 'expo-status-bar';
+import jwt_decode from 'jwt-decode'
 
 export default function LogIn({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        setUrl();
+    }, [])
+
+    const setUrl = () => {
+        console.log(process.env.SERVER_URL);
+    }
 
     const logIn = () => {
         var user = {
@@ -20,6 +30,8 @@ export default function LogIn({ navigation }) {
         axios.post(serverUrl + "/authentication/login", user)
             .then(response => {
                 var token = response.data.accessToken;
+                var decodedToken = jwt_decode(token);
+                console.log(decodedToken);
                 setToken(token);
                 setUsername('');
                 setPassword('');

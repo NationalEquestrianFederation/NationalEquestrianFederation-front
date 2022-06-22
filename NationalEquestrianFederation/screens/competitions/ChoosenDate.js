@@ -6,8 +6,9 @@ import axios from 'axios';
 
 export default function ChoosenDate({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
+    const [date, setDate] = useState('');
     const [competitions, setCompetitions] = useState([]);
 
     useEffect(() => {
@@ -15,9 +16,12 @@ export default function ChoosenDate({ navigation }) {
     }, [])
 
     const getCompetitions = () => {
-        axios.get(serverUrl + "/competitions/" + navigation.getParam('dateString'))
+        console.log(process.env.SERVER_URL)
+        var date = navigation.state.params;
+        axios.get(serverUrl + "/competitions/" + date)
             .then(response => {
                 setCompetitions(response.data);
+                setDate(date);
             })
     }
 
@@ -28,12 +32,23 @@ export default function ChoosenDate({ navigation }) {
     return (
         <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.container}>
-                    <Text style={styles.date}>{navigation.getParam('dateString')}</Text>
+                    <Text style={styles.date}>{date}</Text>
                 <FlatList data={competitions} renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => competitionPressHandler(item)} >
                         <Card>
                             <Text style={globalStyles.titleDate}>{item.startDate} - {item.endDate}</Text>
                             <Text style={globalStyles.titleText}>{item.name}</Text>
+                            <View>
+                                {item.discipline === "jumping" && (
+                                    <View style={styles.jumping}></View>
+                                )}
+                                {item.discipline === "dressage" && (
+                                    <View style={styles.dressage}></View>
+                                )}
+                                {item.discipline === "eventing" && (
+                                    <View style={styles.eventing}></View>
+                                )}
+                            </View>
                         </Card>
                     </TouchableOpacity>
                     )} style={styles.cards}/>
@@ -56,6 +71,27 @@ const styles = StyleSheet.create({
     },
     cards: {
         marginTop: 15
+    },
+    jumping: {
+        height: 1,
+        width: 40,
+        borderTopColor: 'lightgreen',
+        borderTopWidth: 4,
+        marginBottom: 2
+    },
+    dressage: {
+        height: 1,
+        width: 40,
+        borderTopColor: 'skyblue',
+        borderTopWidth: 4,
+        marginBottom: 2
+    },
+    eventing: {
+        height: 1,
+        width: 40,
+        borderTopColor: 'pink',
+        borderTopWidth: 4,
+        marginBottom: 2
     }
 
 })

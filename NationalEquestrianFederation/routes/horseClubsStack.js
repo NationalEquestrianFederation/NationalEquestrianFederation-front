@@ -6,6 +6,7 @@ import Horses from '../screens/horses/Horses';
 import Riders from '../screens/riders/Riders';
 import RidingSchoolOffers from '../screens/horseClubs/ridingSchoolOffers/RidingSchoolOffers';
 import Trainers from '../screens/trainers/Trainers';
+import HorseClubLocation from '../screens/horseClubs/HorseClubLocation';
 
 const screens = {
     HorseClubs: {
@@ -31,10 +32,19 @@ const screens = {
         screen: Riders
     },
     RidingSchoolOffers: {
-        screen: RidingSchoolOffers
+        screen: RidingSchoolOffers,
+        navigationOptions: {
+            title: 'Riding school offers'
+        }
     },
     Trainers: {
         screen: Trainers
+    },
+    HorseClubLocation: {
+        screen: HorseClubLocation,
+        navigationOptions: {
+            title: 'Location'
+        }
     }
 }
 

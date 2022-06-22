@@ -9,10 +9,10 @@ export default function AddCompetition({ addCompetition }) {
     const [name, setName] = useState('');
     const [startDate, setStartDate] = useState(new Date());
     const [openStartDate, setOpenStartDate] = useState(false);
-    const [startDateText, setStartDateText] = useState(new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear());
+    const [startDateText, setStartDateText] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
     const [endDate, setEndDate] = useState(new Date());
     const [openEndDate, setOpenEndDate] = useState(false);
-    const [endDateText, setEndDateText] = useState(new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear());
+    const [endDateText, setEndDateText] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
     const [location, setLocation] = useState('');
     const [discipline, setDiscipline] = useState('');
 
@@ -33,7 +33,24 @@ export default function AddCompetition({ addCompetition }) {
         setOpenStartDate(false);
 
         var tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        var month = "";
+        var date = "";
+        if(tempDate.getMonth() < 10){
+            var m = tempDate.getMonth() + 1;
+            month = '0' + m;
+        } else {
+            month = tempDate.getMonth() + 1;
+        }
+
+        if(tempDate.getDate() < 10){
+            var d = tempDate.getDate();
+            date = '0' + d;
+        } else {
+            date = tempDate.getDate();
+        }
+
+
+        let fDate = tempDate.getFullYear() + '-' + month + '-' + date;
         setStartDateText(fDate);
     }
 
@@ -43,7 +60,23 @@ export default function AddCompetition({ addCompetition }) {
         setOpenEndDate(false);
 
         var tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        var month = "";
+        var date = "";
+        if(tempDate.getMonth() < 10){
+            var m = tempDate.getMonth() + 1;
+            month = '0' + m;
+        } else {
+            month = tempDate.getMonth() + 1;
+        }
+
+        if(tempDate.getDate() < 10){
+            var d = tempDate.getDate();
+            date = '0' + d;
+        } else {
+            date = tempDate.getDate();
+        }
+
+        let fDate = tempDate.getFullYear() + '-' + month + '-' + date;
         setEndDateText(fDate);
     }
 

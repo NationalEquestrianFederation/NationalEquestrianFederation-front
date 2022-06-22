@@ -6,25 +6,35 @@ import AddNews from './AddNews';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function News({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080"
+    const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const [news, setNews] = useState([]);
 
     useEffect(() => {
         getNews();
+        setRoleName();
     }, [])
 
-    const getNews = async () => {
-        var token = await AsyncStorage.getItem('access_token');
-        console.log(token)
-        axios.get(serverUrl + "/news?newsType=nationalFederation")
+    const getNews = () => {
+        const headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        console.log(process.env.SERVER_URL);
+        axios.get(serverUrl + "/news?newsType=nationalFederation", {headers: headers})
             .then((response) => {
                 setNews(response.data);
             })
+            .catch(error => console.log(error))
+    }
+
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
     }
 
     const addNews = (news) => {
@@ -51,12 +61,15 @@ export default function News({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            <MaterialIcons 
-                name='add' 
-                size={24} 
-                style={styles.addButton}
-                color="rgba(252, 252, 252, 0.8)"
-                onPress={() => setModalOpen(true)} />
+            {role === "ROLE_NATIONAL_FEDERATION" && (
+                <MaterialIcons 
+                    name='add' 
+                    size={24} 
+                    style={styles.addButton}
+                    color="rgba(252, 252, 252, 0.8)"
+                    onPress={() => setModalOpen(true)} 
+                />
+            )}
 
             <FlatList data={news} renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => navigation.navigate('ChoosenNews', item)}>

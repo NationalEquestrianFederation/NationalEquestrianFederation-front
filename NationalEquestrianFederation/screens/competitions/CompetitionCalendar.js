@@ -1,44 +1,82 @@
-import { View, Text, StyleSheet, ImageBackground, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Modal, TouchableWithoutFeedback, Keyboard, FlatList, TouchableOpacity } from 'react-native';
 import { Calendar, CaledarList, Agenda } from 'react-native-calendars';
 import { globalStyles } from '../../styles/global';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AddCompetition from './AddCompetition';
 import { MaterialIcons } from '@expo/vector-icons';
+import Card from '../../shared/card';
+import CalendarWeek from '../../shared/calendarWeek';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function CompetitionCalendar({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole] = useState("");
     const [competitions, setCompetitions] = useState([]);
     const [dates, setDates] = useState([]);
+    const [weekDates, setWeekDates] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [competitionsInDay, setCompetitionsInDay] = useState([]);
+    const [month, setMonth] = useState(new Date().getMonth());
+    const [year, setYear] = useState(new Date().getFullYear());
 
-    const [role, setRole] = useState('nationalFederation');    
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "November", "December"];
+    const weeks = [0, 1, 2, 3, 4, 5];
+    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
     useEffect(() => {
-        getCompetitions();
-    }, [])
+        setRoleName();
+        getDates();
+    }, [month])
 
-    const getCompetitions = () => {
-        axios.get(serverUrl + "/competitions")
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
+
+    const getDates = () => {
+        console.log(process.env.SERVER_URL)
+        axios.get(serverUrl + "/calendar?month=" + month + "&year=" + year)
             .then(response => {
-                setCompetitions(response.data);
+                setDates(response.data);
             })
     }
 
-    const datePressHandler = (day) => {
-        console.log(day.dateString)
-        navigation.navigate('ChoosenDate', day)
+    const getWeekDates = (week) => {
+        var begining = week + (6 * week);
+        var end = week + (6 * week) + 7;
+        return dates.slice(begining, end);
     }
 
     const addCompetition = (competition) => {
         axios.post(serverUrl + "/competitions", competition)
             .then(response => {
                 setModalOpen(false);
-                getCompetitions();
+                getDates();
             })
+    }
+
+    const previousMonth = () => {
+        console.log(month)
+        if(month - 1 == 0) {
+            setMonth(12);
+            setYear(year - 1);
+        } else {
+            setMonth(month - 1);
+        }
+    }
+
+    const nextMonth = () => {
+        if(month + 1 == 12) {
+            setMonth(1);
+            setYear(year + 1);
+        } else {
+            setMonth(month + 1);
+        }
     }
 
     return (
@@ -52,13 +90,14 @@ export default function CompetitionCalendar({ navigation }) {
                             name='close' 
                             size={24} 
                             style={{...globalStyles.closeButton, ...globalStyles.modalClose}}
-                            onPress={() => setModalOpen(false)} />
+                            onPress={() => setModalOpen(false)}
+                        />
                         <AddCompetition addCompetition={addCompetition}  />
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
 
-            {(role === 'nationalFederation' || role === 'cityFederation') && (
+            {(role === 'ROLE_NATIONAL_FEDERATION' || role === 'ROLE_CITY_FEDERATION') && (
                 <MaterialIcons 
                     name='add' 
                     size={24} 
@@ -68,26 +107,33 @@ export default function CompetitionCalendar({ navigation }) {
                 />
             )}
 
-            <Calendar style={styles.calendar} 
-                markingType="multi-period"
-                markedDates={{
-                    '2022-05-14': {
-                    periods: [
-                        {startingDay: false, endingDay: true, color: '#5f9ea0'},
-                        {startingDay: false, endingDay: true, color: '#ffa500'},
-                        {startingDay: true, endingDay: false, color: '#f0e68c'}
-                    ]
-                    },
-                    '2022-05-15': {
-                    periods: [
-                        {startingDay: true, endingDay: false, color: '#ffa500'},
-                        {color: 'transparent'},
-                        {startingDay: false, endingDay: false, color: '#f0e68c'}
-                    ]
-                    }
-                }}
-                onDayPress={(day) => datePressHandler(day)}
+            <Card >
+                <View style={styles.calendarHeader}>
+                    <MaterialIcons 
+                        name='arrow-back' 
+                        size={20} 
+                        onPress={() => previousMonth()}
+                        style={styles.previousMonth}
+                    />
+                    <Text>{months[month]} {year}</Text>
+                    <MaterialIcons 
+                        name='arrow-forward' 
+                        size={20} 
+                        onPress={() => nextMonth()}
+                        style={styles.nextMonth}
+                    />
+                </View>
+                <FlatList data={weekDays} horizontal style={styles.week} renderItem={({ item }) => (
+                    <View style={styles.card}>
+                        <Text style={styles.day}>{item}</Text>
+                    </View>
+                    )} 
                 />
+                <FlatList data={weeks} style={styles.weekDates} renderItem={({ item }) => (
+                    <CalendarWeek dates={getWeekDates(item)} week={item} navigation={navigation} />
+                    )} 
+                />
+            </Card>
 
             </View>
         </ImageBackground>
@@ -103,5 +149,34 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         opacity: 0.9,
         borderRadius: 10
+    },
+    calendarHeader: {
+        alignSelf: 'center',
+        flexDirection: 'row'
+    },
+    week: {
+        marginLeft: -30,
+        alignSelf: 'center'
+    },
+    card: {
+        width: 47,
+        height: 40,
+        alignItems: 'flex-end',
+        paddingTop: 12,
+        paddingLeft: 5,
+        paddingRight: 5,
+    },
+    day: {
+        color: 'gray',
+        fontWeight: 'bold'
+    },
+    weekDates: {
+        marginLeft: -12,
+    },
+    previousMonth: {
+        marginRight: 25
+    },
+    nextMonth: {
+        marginLeft: 25
     }
 })

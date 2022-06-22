@@ -6,21 +6,32 @@ import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
 import AddRider from './AddRider';
 import EditRider from './EditRider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from 'jwt-decode';
 
 export default function Riders({ navigation }) {
 
-    const serverUrl = "http://10.0.2.2:8080";
+    const serverUrl = process.env.SERVER_URL;
 
+    const [role, setRole] = useState("");
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [riders, setRiders] = useState([]);
     const [editingRider, setEditingRider] = useState({});
 
     useEffect(() => {
+        setRoleName();
         getRiders();
     }, [])
 
+    const setRoleName = async () => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        setRole(decodedToken.role);
+    }
+
     const getRiders = () => {
+        console.log(process.env.SERVER_URL)
         axios.get(serverUrl + "/riders?horseClub=0")
             .then(response => {
                 setRiders(response.data);
@@ -34,8 +45,20 @@ export default function Riders({ navigation }) {
             })
     }
 
-    const addRider = (rider) => {
-        axios.post(serverUrl + "/riders", rider)
+    const addRider = async (rider) => {
+        var token = await AsyncStorage.getItem('access_token');
+        var decodedToken = jwt_decode(token);
+        var ownerId = decodedToken.id;
+
+        var newRider = {
+            name: rider.name,
+            surname: rider.surname,
+            dateOfBirth: rider.dateOfBirth,
+            gender: rider.gender,
+            licence: rider.licence,
+            ownerId: ownerId
+        }
+        axios.post(serverUrl + "/riders", newRider)
             .then(response => {
                 setAddModalOpen(false);
                 getRiders();
@@ -71,12 +94,15 @@ export default function Riders({ navigation }) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            <MaterialIcons 
-                name='add' 
-                size={24} 
-                style={globalStyles.addButton}
-                color="rgba(252, 252, 252, 0.8)"
-                onPress={() => setAddModalOpen(true)} />
+            {role === "ROLE_HORSE_CLUB" && (
+                <MaterialIcons 
+                    name='add' 
+                    size={24} 
+                    style={globalStyles.addButton}
+                    color="rgba(252, 252, 252, 0.8)"
+                    onPress={() => setAddModalOpen(true)}
+                />
+            )}
 
             <FlatList data={riders} renderItem={({ item }) => (
                 <Card>
@@ -95,25 +121,34 @@ export default function Riders({ navigation }) {
                     </Modal>
 
                     <View style={styles.name}>
-                        <Text style={globalStyles.titleText}>{item.name}</Text>
-                        <Text style={styles.title}>{item.surname}</Text>
+                        <Text style={styles.titleLabel}>{item.name} {item.surname}</Text>
                     </View>
-                    <View style={styles.name}>
-                        <Text>{item.licence}</Text>
-                    </View>
+                    <Text style={styles.label}>* Date of birth</Text>
+                    <Text>{item.dateOfBirth}</Text>
+                    <Text style={styles.label}>* Gender</Text>
+                    <Text >{item.gender}</Text>
+                    <Text style={styles.label}>* Licence</Text>
+                    <Text >{item.licence}</Text>
 
                     <View style={styles.buttons}>
-                        <MaterialIcons 
-                            name='delete' 
-                            size={24} 
-                            style={styles.deleteButton} 
-                            onPress={() => deleteRider(item.id)} />
+                        {role === "ROLE_HORSE_CLUB" && (
+                            <MaterialIcons 
+                                name='delete' 
+                                size={24} 
+                                style={styles.deleteButton} 
+                                onPress={() => deleteRider(item.id)}
+                            />
+                        )}
 
-                        <MaterialIcons 
-                            name='edit' 
-                            size={24} 
-                            style={styles.deleteButton} 
-                            onPress={() => editForm(item)} />
+                        {role === "ROLE_HORSE_CLUB" && (
+                            <MaterialIcons 
+                                name='edit' 
+                                size={24} 
+                                style={styles.deleteButton} 
+                                onPress={() => editForm(item)}
+                            />
+                        )}
+
                     </View>
 
                 </Card>
@@ -130,10 +165,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     title: {
-        fontSize: 18,
+        fontSize: 12,
+        color: 'white',
+        marginLeft: 17,
+        marginTop: -3,
+        fontStyle: 'italic'
+    },  
+    titleLabel: {
+        fontSize: 25,
         fontWeight: 'bold',
-        fontStyle: 'italic',
-        marginLeft: 3
+        fontStyle: 'italic'
+    },
+    label: {
+        marginTop: 10,
+        fontSize: 17,
+        fontWeight: 'bold'
     },
     buttons: {
         flexDirection: 'row',
