@@ -1,8 +1,10 @@
-import { StyleSheet, Button, TextInput, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, TextInput, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { globalStyles } from "../../styles/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import Button from "../../shared/button";
+import MultiSelect from 'react-native-multiple-select';
 
 export default function AddCompetition({ addCompetition }) {
 
@@ -15,6 +17,26 @@ export default function AddCompetition({ addCompetition }) {
     const [endDateText, setEndDateText] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
     const [location, setLocation] = useState('');
     const [discipline, setDiscipline] = useState('');
+    const [officials, setOfficials] = useState([]);
+    const [chosenOfficials, setChosenOfficials] = useState([]);
+
+    useEffect(() => {
+        getOfficials();
+    }, [])
+
+    const getOfficials = () => {
+        var officials = [
+            {
+                id: 1,
+                name: "Marina Jovanović"
+            }, 
+            {
+                id: 2,
+                name: "Nikola Nikić"
+            }
+        ]
+        setOfficials(officials);
+    }
 
     const addCompetitionHandler = () => {
         var competition = {
@@ -83,15 +105,16 @@ export default function AddCompetition({ addCompetition }) {
     return (
         <View>
             <ScrollView>
-                <Text style={styles.titleText}>Add competition</Text>
+                <Text style={styles.titleText}>Organize competition</Text>
 
+                <Text></Text>
                 <TextInput 
                     style={globalStyles.input} 
                     placeholder='Name'
                     onChangeText={(value) => setName(value)}
                     value={name}
                 />
-                <Text></Text>
+                <Text style={globalStyles.errorText}></Text>
 
                 {openStartDate && (<DateTimePicker
                     value={startDate}
@@ -101,10 +124,10 @@ export default function AddCompetition({ addCompetition }) {
                     />
                 )}
 
-                <TouchableOpacity style={globalStyles.dateButton} onPress={() => setOpenStartDate(true)}>
+                <TouchableOpacity style={globalStyles.input} onPress={() => setOpenStartDate(true)}>
                     <Text style={globalStyles.dateButtonText}>Start date - {startDateText}</Text>
                 </TouchableOpacity>
-                <Text></Text>
+                <Text style={globalStyles.errorText}></Text>
 
                 {openEndDate && (<DateTimePicker
                     value={endDate}
@@ -114,10 +137,10 @@ export default function AddCompetition({ addCompetition }) {
                     />
                 )}
 
-                <TouchableOpacity style={globalStyles.dateButton} onPress={() => setOpenEndDate(true)}>
+                <TouchableOpacity style={globalStyles.input} onPress={() => setOpenEndDate(true)}>
                     <Text style={globalStyles.dateButtonText}>End date - {endDateText}</Text>
                 </TouchableOpacity>
-                <Text></Text>
+                <Text style={globalStyles.errorText}></Text>
                 
                 <TextInput 
                     style={globalStyles.input} 
@@ -125,20 +148,58 @@ export default function AddCompetition({ addCompetition }) {
                     onChangeText={(value) => setLocation(value)}
                     value={location}
                 />
-                <Text></Text>
+                <Text style={globalStyles.errorText}></Text>
 
                 <Picker 
                     selectedValue={discipline}
+                    style={globalStyles.input}
                     onValueChange={value => setDiscipline(value)}>
                     <Picker.Item label="Jumping" value="jumping" />
                     <Picker.Item label="Dressage" value="dressage" />
                     <Picker.Item label="Eventing" value="eventing" />
                 </Picker>
+                <Text style={globalStyles.errorText}></Text>
+
+                <TextInput 
+                    style={globalStyles.input} 
+                    placeholder='Organizer'
+                    onChangeText={(value) => setLocation(value)}
+                    value={location}
+                />
+                <Text style={globalStyles.errorText}></Text>
+
+                <MultiSelect
+                    hideTags
+                    items={officials}
+                    uniqueKey="id"
+                    onSelectedItemsChange={() => setChosenOfficials(chosenOfficials)}
+                    selectedItems={chosenOfficials}
+                    selectText="Officials"
+                    searchInputPlaceholderText="Search officials..."
+                    onChangeInput={ (text)=> console.log(text)}
+                    tagRemoveIconColor="#CCC"
+                    tagBorderColor="#CCC"
+                    tagTextColor="#CCC"
+                    selectedItemTextColor="#CCC"
+                    selectedItemIconColor="#CCC"
+                    itemTextColor="#000"
+                    displayKey="name"
+                    styleMainWrapper={{width: '85%', alignSelf: 'center'}}
+                    searchInputStyle={{ color: '#CCC', fontSize: 17, padding: 7 }}
+                    styleDropdownMenu={{fontSize: 20}}
+                    submitButtonColor="black"
+                    submitButtonText="Submit"
+                    fontSize={16}
+                    style={globalStyles.input}
+                />
+
                 <Text></Text>
 
-                <Button title="Submit" onPress={addCompetitionHandler} />
+            <Button handler={addCompetitionHandler} text="Submit" />
 
             </ScrollView>
+
+            
         </View>
     )
 

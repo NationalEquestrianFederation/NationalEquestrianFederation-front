@@ -83,7 +83,7 @@ export default function CompetitionCalendar({ navigation }) {
         <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={globalStyles.container}>
 
-            <Modal visible={modalOpen}>
+            <Modal visible={modalOpen} transparent={true} >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={globalStyles.modalContent}>
                         <MaterialIcons 
@@ -135,6 +135,21 @@ export default function CompetitionCalendar({ navigation }) {
                 />
             </Card>
 
+            <Card>
+                <View style={styles.legend}>
+                    <View style={styles.jumping}></View>
+                    <Text>Jumping</Text>
+                </View>
+                <View style={styles.legend}>
+                    <View style={styles.dressage}></View>
+                    <Text>Dressage</Text>
+                </View>
+                <View style={styles.legend}>
+                    <View style={styles.eventing}></View>
+                    <Text>Eventing</Text>
+                </View>
+            </Card>
+
             </View>
         </ImageBackground>
     )
@@ -178,5 +193,33 @@ const styles = StyleSheet.create({
     },
     nextMonth: {
         marginLeft: 25
+    },
+    legend: {
+        flexDirection: 'row',
+        marginTop: 5
+    },  
+    jumping: {
+        height: 1,
+        width: 45,
+        borderTopColor: 'lightgreen',
+        borderTopWidth: 7,
+        marginTop: 8,
+        marginRight: 5
+    },
+    dressage: {
+        height: 1,
+        width: 45,
+        borderTopColor: 'skyblue',
+        borderTopWidth: 7,
+        marginTop: 8,
+        marginRight: 5
+    },
+    eventing: {
+        height: 1,
+        width: 45,
+        borderTopColor: 'pink',
+        borderTopWidth: 7,
+        marginTop: 8,
+        marginRight: 5
     }
 })

@@ -16,11 +16,15 @@ export const globalStyles = StyleSheet.create({
         marginTop: -3,
     },
     input: {
-        borderBottomWidth: 1,
         borderBottomColor: '#ddd',
+        fontSize: 18,
+        borderRadius: 6,
+        alignSelf: 'center',
         padding: 10,
         fontSize: 18,
         borderRadius: 6,
+        backgroundColor: 'white',
+        width: '85%'
     },
     errorText: {
         color: 'crimson',
@@ -43,10 +47,7 @@ export const globalStyles = StyleSheet.create({
     },
     closeButton: {
         marginBottom: 10,
-        borderWidth: 1,
-        borderColor: 'lightgray',
         padding: 2,
-        borderRadius: 10,
         marginRight: 5,
         alignSelf: 'flex-end',
     },

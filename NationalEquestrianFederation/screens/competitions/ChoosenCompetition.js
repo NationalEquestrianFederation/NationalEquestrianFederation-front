@@ -13,12 +13,7 @@ export default function ChoosenCompetition({ navigation }) {
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
-        setServerUrl();
     }, [])
-
-    const setServerUrl = () => {
-        console.log(process.env.SERVER_URL);
-    }
 
     const apply = (application) => {
         console.log(application);
@@ -39,7 +34,7 @@ export default function ChoosenCompetition({ navigation }) {
         <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             <View style={styles.container}>
 
-                <Modal visible={modalOpen}>
+                <Modal visible={modalOpen} transparent={true}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={globalStyles.modalContent}>
                             <MaterialIcons 
@@ -59,6 +54,7 @@ export default function ChoosenCompetition({ navigation }) {
                 <TouchableOpacity onPress={() => navigation.navigate('CompetitionApplications', navigation.getParam('id'))}>
                     <Text style={styles.apply}>APPLICATIONS</Text>
                 </TouchableOpacity>
+                
                 <Card>
                     <ScrollView>
                         <Text style={styles.titleLabel}>{navigation.getParam('name')}</Text>
@@ -81,6 +77,15 @@ export default function ChoosenCompetition({ navigation }) {
                         <Text>{navigation.getParam('endDate')}</Text>
                         <Text style={styles.label}>* Place: </Text>
                         <Text>{navigation.getParam('location')}</Text>
+
+                        <View style={styles.hr}></View>
+
+                        <Text style={styles.label}>* Officials: </Text>
+                        <View style={styles.officials}>
+                            <Text>- Nikola Vukičević</Text> 
+                            <Text>- Marina Jovanović</Text> 
+                        </View>
+
                     </ScrollView>
                 </Card>
             </View>
@@ -138,5 +143,13 @@ const styles = StyleSheet.create({
         borderTopColor: 'pink',
         borderTopWidth: 4,
         marginBottom: 2
+    }, 
+    hr: {
+        marginTop: 20,
+        borderBottomColor: 'black',
+        borderBottomWidth: 1
+    },
+    officials: {
+        marginLeft: 40
     }
 })

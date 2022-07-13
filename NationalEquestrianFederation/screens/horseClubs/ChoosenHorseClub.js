@@ -1,4 +1,4 @@
-import { Text, ImageBackground, StyleSheet, ScrollView, TouchableOpacity, Modal, TouchableWithoutFeedback, Keyboard, View, Image } from 'react-native';
+import { Text, ImageBackground, StyleSheet, ScrollView, TouchableOpacity, Modal, TouchableWithoutFeedback, Keyboard, View, Image, FlatList } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import Card from '../../shared/card';
 import Icon from '../../shared/icon';
@@ -15,6 +15,7 @@ export default function ChoosenHorseClub({ navigation }) {
 
     const [role, setRole] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
+    const [news, setNews] = useState([]);
 
     const [club, setClub] = useState({
         id: navigation.getParam('id'),
@@ -28,14 +29,24 @@ export default function ChoosenHorseClub({ navigation }) {
     });
 
     useEffect(() => {
-        console.log(process.env.SERVER_URL);
         setRoleName();
+        getNews();
     }, [])
 
     const setRoleName = async () => {
         var token = await AsyncStorage.getItem('access_token');
         var decodedToken = jwt_decode(token);
         setRole(decodedToken.role);
+    }
+
+    const getNews = () => {
+        const headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        console.log(process.env.SERVER_URL);
+        axios.get(serverUrl + "/news?newsType=nationalFederation", {headers: headers})
+            .then((response) => {
+                setNews(response.data);
+            })
+            .catch(error => console.log(error))
     }
 
     const editHorseClub = (club) => {
@@ -51,6 +62,20 @@ export default function ChoosenHorseClub({ navigation }) {
             .then(response => {
                 setClub(response.data);
             })
+    }
+
+    const pad2 = (n) => {
+        return (n < 10 ? '0' : '') + n;
+      }
+
+    const getDate = (date) => {
+        var date = new Date();
+        var month = pad2(date.getMonth()+1);
+        var day = pad2(date.getDate());
+        var year= date.getFullYear();
+
+        date = day + '-' + month + '-' + year;
+        return date;
     }
 
     return (
@@ -79,7 +104,7 @@ export default function ChoosenHorseClub({ navigation }) {
                     <Icon>
                         <Image style={styles.rider} source={require('../../assets/trainer-icon.png')}/>
                     </Icon>
-                    <Text style={styles.title}>Trainers</Text>
+                    <Text style={styles.title}>Trainer</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('HorseClubLocation', club)}>
                     <Icon>
@@ -120,14 +145,34 @@ export default function ChoosenHorseClub({ navigation }) {
                     <Text style={styles.titleLabel}>{club.name}</Text>
                     <Text style={styles.label}>Location</Text>
                     <Text>{club.address}</Text>
+                    <Text style={styles.label}>Phone number</Text>
+                    <Text>{club.phone}</Text>
                     <Text style={styles.label}>Email</Text>
                     <Text>{club.email}</Text>
-                    <Text style={styles.label}>Phone</Text>
-                    <Text>{club.phone}</Text>
+                    <Text style={styles.label}>Web site</Text>
+                    <Text>www.viking.com</Text>
                     <Text style={styles.label}>Something about us</Text>
                     <Text>{club.description}</Text>
                 </Card>
+
+                <Text style={styles.newsTitle}>What's new?</Text>
+
+                {news.map(item => 
+                    <TouchableOpacity key={item.id} >
+                        <Card>
+                            <Text style={globalStyles.titleDate}>{getDate(item.date)}</Text>
+                            <Text style={globalStyles.titleText}>{item.title}</Text>
+                            <View style={styles.content}>
+                                <Text>{item.content}</Text>
+                            </View>
+                        </Card>
+                    </TouchableOpacity>
+                )}
+
             </ScrollView>
+
+            
+
         </ImageBackground>
     )
 
@@ -138,7 +183,7 @@ const styles = StyleSheet.create({
         marginLeft: -5,
         marginTop: 10,
         flexDirection: 'row',
-        marginBottom: 20,
+        marginBottom: 5,
         alignSelf: 'center'
     },
     title: {
@@ -168,5 +213,12 @@ const styles = StyleSheet.create({
     },
     editButton: {
         alignSelf: 'flex-end'
+    },
+    newsTitle: {
+        fontSize: 20,
+        color: 'white',
+        marginTop: 10,
+        fontStyle: 'italic',
+        alignSelf: 'center'
     }
 })

@@ -32,7 +32,6 @@ export default function HorseClubs({ navigation }) {
         axios.get(serverUrl + "/horseClubs?name=")
             .then(response => {
                 setClubs(response.data);
-                console.log(response.data)
             })
     }
 
@@ -51,7 +50,7 @@ export default function HorseClubs({ navigation }) {
     return (
         <ImageBackground source={require('../../assets/background.jpg')} style={globalStyles.container} >
             
-            <Modal visible={modalOpen}>
+            <Modal visible={modalOpen} transparent={true}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.modalContent}>
                         <MaterialIcons 
@@ -107,10 +106,7 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         marginBottom: 10,
-        borderWidth: 1,
-        borderColor: 'lightgray',
         padding: 2,
-        borderRadius: 10,
         marginRight: 5,
         alignSelf: 'flex-end',
     },

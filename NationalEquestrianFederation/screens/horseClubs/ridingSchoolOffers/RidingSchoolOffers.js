@@ -107,17 +107,15 @@ export default function RidingSchoolOffers({ navigation }) {
                         </TouchableWithoutFeedback>
                     </Modal>
 
-                    <Text style={globalStyles.titleText}>{item.name}</Text>
-                    <View style={styles.content}>
-                        <Text style={styles.label}>Start</Text>
-                        <Text >{item.startDate}</Text>
-                        <Text></Text>
-                        <Text style={styles.label}>End</Text>
-                        <Text >{item.endDate}</Text>
-                        <Text></Text>
-                        <Text style={styles.label}>Price</Text>
-                        <Text>{item.price}e</Text>
-                    </View>
+                    <Text style={styles.titleLabel}>{item.name}</Text>
+                    <Text style={styles.label}>* Start date</Text>
+                    <Text>{item.startDate}</Text>
+                    <Text style={styles.label}>* End date</Text>
+                    <Text >{item.endDate}</Text>
+                    <Text style={styles.label}>* Price</Text>
+                    <Text >{item.price}</Text>
+                    <Text style={styles.label}>* Description</Text>
+                    <Text >{item.description}</Text>
 
                     <View style={styles.buttons}>
                         {role === "ROLE_HORSE_CLUB" && (
@@ -164,8 +162,14 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#acaeb0',
     },
+    titleLabel: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        fontStyle: 'italic'
+    },
     label: {
-        fontSize: 15,
+        marginTop: 10,
+        fontSize: 17,
         fontWeight: 'bold'
     },
     buttons: {

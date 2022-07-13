@@ -1,4 +1,4 @@
-import { Text, ImageBackground, FlatList, StyleSheet, TouchableWithoutFeedback, Keyboard, Modal, View } from 'react-native';
+import { Text, ImageBackground, FlatList, StyleSheet, TouchableWithoutFeedback, Keyboard, Modal, View, Image } from 'react-native';
 import Card from '../../shared/card';
 import { globalStyles } from '../../styles/global';
 import { useState, useEffect } from 'react';
@@ -8,6 +8,7 @@ import AddHorse from './AddHorse';
 import EditHorse from './EditHorse';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from 'jwt-decode';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Horses({ navigation }) {
 
@@ -32,8 +33,6 @@ export default function Horses({ navigation }) {
     }
 
     const getHorses = () => {
-        console.log(process.env.SERVER_URL)
-        console.log(navigation.getParam('id'))
         axios.get(serverUrl + "/horses?horseClub=" + horseClub)
             .then(response => {
                 setHorses(response.data);
@@ -103,53 +102,58 @@ export default function Horses({ navigation }) {
                 />
             )}
 
-            <FlatList data={horses} renderItem={({ item }) => (
+            <ScrollView style={styles.cards}>
                 <Card>
-
-                    <Modal visible={editModalOpen}>
-                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                            <View style={globalStyles.modalContent}>
-                                <MaterialIcons 
-                                    name='close' 
-                                    size={24} 
-                                    style={{...styles.closeButton, ...styles.modalClose}}
-                                    onPress={() => setEditModalOpen(false)} />
-                                <EditHorse horse={editingHorse} editHorse={editHorse}  />
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </Modal>
-                
-                    <Text style={styles.titleLabel}>{item.name}</Text>
-                    <Text style={styles.label}>* Gender</Text>
-                    <Text >{item.gender}</Text>
-                    <Text style={styles.label}>* Year of birth</Text>
-                    <Text>{item.yearOfBirth}</Text>
-                    <Text style={styles.label}>* Owner</Text>
-                    <Text>{item.owner}</Text>
-
-                    <View style={styles.buttons}>
-                        {role === "ROLE_HORSE_CLUB" && (
-                            <MaterialIcons 
-                                name='delete' 
-                                size={24} 
-                                style={styles.deleteButton} 
-                                onPress={() => deleteHorse(item.id)}
-                            />
-                        )}
-
-                        {role === "ROLE_HORSE_CLUB" && (
-                            <MaterialIcons 
-                                name='edit' 
-                                size={24} 
-                                style={styles.deleteButton} 
-                                onPress={() => editForm(item)}
-                            />
-                        )}
-                        
+                    <View style={styles.horseData}>
+                        <View >
+                            <Text style={styles.titleLabel}>Quincon Z</Text>
+                            <Text style={styles.label}>* Gender</Text>
+                            <Text >stallion</Text>
+                            <Text style={styles.label}>* Year of birth</Text>
+                            <Text>2006</Text>
+                            <Text style={styles.label}>* Breed</Text>
+                            <Text>Zaingersheide</Text>
+                            <Text style={styles.label}>* Owner</Text>
+                            <Text>Miloš Krajić</Text>
+                        </View>
+                        <Image style={styles.image} source={require('../../assets/Q1.jpeg')}/>
                     </View>
-
                 </Card>
-            )} style={styles.cards}/>
+                <Card>
+                    <View style={styles.horseData}>
+                        <View >
+                            <Text style={styles.titleLabel}>Easy Gold</Text>
+                            <Text style={styles.label}>* Gender</Text>
+                            <Text >mare</Text>
+                            <Text style={styles.label}>* Year of birth</Text>
+                            <Text>2012</Text>
+                            <Text style={styles.label}>* Breed</Text>
+                            <Text>KWPN</Text>
+                            <Text style={styles.label}>* Owner</Text>
+                            <Text>Petar Mladenović</Text>
+                        </View>
+                        <Image style={styles.image} source={require('../../assets/Easy.jpg')}/>
+                    </View>
+                </Card>
+                <Card>
+                    <View style={styles.horseData}>
+                        <View >
+                            <Text style={styles.titleLabel}>Contender</Text>
+                            <Text style={styles.label}>* Gender</Text>
+                            <Text >gelding</Text>
+                            <Text style={styles.label}>* Year of birth</Text>
+                            <Text>2017</Text>
+                            <Text style={styles.label}>* Breed</Text>
+                            <Text>Holstein</Text>
+                            <Text style={styles.label}>* Owner</Text>
+                            <Text>Jovana Adamović</Text>
+                        </View>
+                        <Image style={styles.image} source={require('../../assets/horse3.jpg')}/>
+                    </View>
+                </Card>
+            </ScrollView>
+
+            
         </ImageBackground>
     )
 }
@@ -183,4 +187,14 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold'
     },
+    horseData: {
+        flexDirection: 'row'
+    },
+    image: {
+        marginLeft: '10%',
+        marginTop: '17%',
+        maxWidth: '52%',
+        maxHeight: 200,
+        borderRadius: 10
+    }
 })
